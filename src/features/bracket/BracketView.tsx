@@ -45,10 +45,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway,
   const hasResult = match.homeGoals !== null && match.awayGoals !== null;
 
   return (
-    <div className="bg-slate-800 rounded-xl border border-slate-700 overflow-hidden shadow-lg">
+    <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-md">
       {/* Nagłówek slotu */}
       {(slotHome || slotAway) && (
-        <div className="flex justify-between px-3 py-1 bg-slate-900/60 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+        <div className="flex justify-between px-3 py-1 bg-gray-900/60 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
           <span>{slotHome}</span>
           <span>vs</span>
           <span>{slotAway}</span>
@@ -56,7 +56,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway,
       )}
 
       {/* Drużyna 1 */}
-      <div className={`flex items-center gap-2 px-3 py-2 border-b border-slate-700/50 ${hasResult && match.homeGoals! > match.awayGoals! ? 'bg-indigo-900/20' : ''}`}>
+      <div className={`flex items-center gap-2 px-3 py-2 border-b border-gray-700 ${hasResult && match.homeGoals! > match.awayGoals! ? 'bg-indigo-900/20' : ''}`}>
         <span className="text-lg w-7 text-center">{match.homeTeamId ? teamFlag(homeName) : '❓'}</span>
         <select
           value={match.homeTeamId ?? ''}
@@ -70,14 +70,14 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway,
           {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         {hasResult && (
-          <span className={`text-lg font-bold w-6 text-right ${match.homeGoals! > match.awayGoals! ? 'text-white' : 'text-slate-500'}`}>
+          <span className={`text-lg font-bold w-6 text-right ${match.homeGoals! > match.awayGoals! ? 'text-white' : 'text-gray-500'}`}>
             {match.homeGoals}
           </span>
         )}
       </div>
 
       {/* Drużyna 2 */}
-      <div className={`flex items-center gap-2 px-3 py-2 ${hasResult && match.awayGoals! > match.homeGoals! ? 'bg-indigo-900/20' : ''}`}>
+      <div className={`flex items-center gap-2 px-3 py-2 ${hasResult && match.awayGoals! > match.homeGoals! ? 'bg-indigo-900/20' : ''}`}>  
         <span className="text-lg w-7 text-center">{match.awayTeamId ? teamFlag(awayName) : '❓'}</span>
         <select
           value={match.awayTeamId ?? ''}
@@ -91,7 +91,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway,
           {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         {hasResult && (
-          <span className={`text-lg font-bold w-6 text-right ${match.awayGoals! > match.homeGoals! ? 'text-white' : 'text-slate-500'}`}>
+          <span className={`text-lg font-bold w-6 text-right ${match.awayGoals! > match.homeGoals! ? 'text-white' : 'text-gray-500'}`}>
             {match.awayGoals}
           </span>
         )}
@@ -99,7 +99,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway,
 
       {/* Dogrywka */}
       {hasResult && match.extraTimeWinnerId && (
-        <div className="px-3 py-1 bg-amber-900/20 text-[10px] text-amber-400 text-center font-semibold">
+        <div className="px-3 py-1 bg-yellow-900/20 text-[10px] text-yellow-400 text-center font-semibold">
           Zwycięzca po dogrywce: {teamName(match.extraTimeWinnerId, teams)}
         </div>
       )}
@@ -142,8 +142,7 @@ export const BracketView: React.FC = () => {
     <div className="space-y-10 pb-20">
       {phases.map(({ label, matches: phaseMatches, cols, isR32 }) => (
         <div key={label} className="space-y-4">
-          <h3 className="text-xl font-bold text-white uppercase tracking-wider border-b border-slate-700 pb-2 flex items-center gap-2">
-            <span className="w-2 h-6 bg-indigo-500 rounded-full inline-block"></span>
+          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest border-l-2 border-indigo-500 pl-3 flex items-center gap-2">
             {label}
           </h3>
           <div className={`grid ${cols} gap-3`}>

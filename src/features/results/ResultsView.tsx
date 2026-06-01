@@ -40,7 +40,7 @@ export const ResultsView: React.FC = () => {
 
         return (
           <div key={`${p.phase}-${p.group ?? ''}`} className="space-y-4">
-            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest pl-2">{p.label}</h3>
+            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest border-l-2 border-indigo-500 pl-3">{p.label}</h3>
             <div className="grid grid-cols-1 gap-2">
               {phaseMatches.map(m => (
                 <MatchResultRow

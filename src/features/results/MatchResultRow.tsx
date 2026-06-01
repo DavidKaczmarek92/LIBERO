@@ -29,42 +29,42 @@ export const MatchResultRow: React.FC<Props> = ({ match, teams, onSave }) => {
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-700 rounded-lg p-3 flex flex-wrap items-center gap-4">
-      <div className="flex-1 flex items-center justify-between min-w-[300px]">
-        <span className="w-1/3 text-right font-medium text-slate-200 flex items-center justify-end gap-1.5">
-          <span>{homeTeam?.name ?? 'TBD'}</span>
-          <span className="text-lg">{teamFlag(homeTeam?.name)}</span>
+    <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 flex flex-wrap items-center gap-3 shadow-sm">
+      <div className="flex-1 flex items-center justify-between min-w-[280px]">
+        <span className="w-2/5 text-right font-semibold text-white flex items-center justify-end gap-2">
+          <span className="text-sm">{homeTeam?.name ?? 'TBD'}</span>
+          <span className="text-xl leading-none">{teamFlag(homeTeam?.name)}</span>
         </span>
-        <div className="flex items-center gap-2 px-4">
+        <div className="flex items-center gap-2 px-3">
           <input
             type="number"
             min="0"
             value={homeGoals}
             onChange={(e) => setHomeGoals(e.target.value === '' ? '' : parseInt(e.target.value))}
-            className="bg-slate-700 border border-slate-600 rounded px-2 py-1 w-12 text-center text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="bg-gray-700 border border-gray-600 rounded-lg px-2 py-1.5 w-12 text-center text-white font-bold text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
-          <span className="text-slate-500">:</span>
+          <span className="text-gray-400 font-bold">:</span>
           <input
             type="number"
             min="0"
             value={awayGoals}
             onChange={(e) => setAwayGoals(e.target.value === '' ? '' : parseInt(e.target.value))}
-            className="bg-slate-700 border border-slate-600 rounded px-2 py-1 w-12 text-center text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="bg-gray-700 border border-gray-600 rounded-lg px-2 py-1.5 w-12 text-center text-white font-bold text-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
-        <span className="w-1/3 text-left font-medium text-slate-200 flex items-center gap-1.5">
-          <span className="text-lg">{teamFlag(awayTeam?.name)}</span>
-          <span>{awayTeam?.name ?? 'TBD'}</span>
+        <span className="w-2/5 text-left font-semibold text-white flex items-center gap-2">
+          <span className="text-xl leading-none">{teamFlag(awayTeam?.name)}</span>
+          <span className="text-sm">{awayTeam?.name ?? 'TBD'}</span>
         </span>
       </div>
 
       {isKnockout && isDraw && (
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400 uppercase font-bold">Zwycięzca:</span>
+          <span className="text-xs text-gray-400 font-semibold">Zwycięzca:</span>
           <select
             value={etWinner ?? ''}
             onChange={(e) => setEtWinner(parseInt(e.target.value) || null)}
-            className="bg-slate-700 border border-slate-600 rounded px-2 py-1 text-xs text-white focus:outline-none"
+            className="bg-gray-700 border border-gray-600 rounded-lg px-2 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Wybierz...</option>
             {homeTeam && <option value={homeTeam.id}>{homeTeam.name}</option>}
@@ -75,7 +75,7 @@ export const MatchResultRow: React.FC<Props> = ({ match, teams, onSave }) => {
 
       <button
         onClick={handleSave}
-        className="ml-auto bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded px-3 py-1.5 transition-colors uppercase font-bold tracking-wider"
+        className="ml-auto bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-lg px-4 py-1.5 font-semibold transition-colors"
       >
         Zapisz wynik
       </button>
