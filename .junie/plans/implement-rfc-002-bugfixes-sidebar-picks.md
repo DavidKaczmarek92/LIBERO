@@ -89,7 +89,7 @@ Verification will be performed through manual UI testing and by ensuring persist
 
 # Delivery Steps
 
-### * Step 1: Implement Persistence Fix and Dynamic Data Models
+### ✓ Step 1: Implement Persistence Fix and Dynamic Data Models
 The application has a robust, environment-aware storage system and updated data models to support dynamic tournament phases.
 
 - Create `src/store/storage.ts` with a `tauriStorage` adapter and `localStorage` fallback.
@@ -99,7 +99,7 @@ The application has a robust, environment-aware storage system and updated data 
 - Add new i18n keys to `src/i18n/locales/pl.json` for navigation and templates.
 - Commit the changes for this step.
 
-###   Step 2: Implement Sidebar Layout and AppShell Navigation
+### * Step 2: Implement Sidebar Layout and AppShell Navigation
 The application uses a modern sidebar layout for navigation on desktop and a responsive layout for smaller screens.
 
 - Create `src/components/layout/Sidebar.tsx` with navigation items and active state management.
