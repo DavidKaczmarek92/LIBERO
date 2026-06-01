@@ -4,6 +4,9 @@ import "./App.css";
 import TournamentCreator from "./features/tournament/TournamentCreator";
 import PlayerList from "./features/players/PlayerList";
 import TournamentPickForm from "./features/picks/TournamentPickForm";
+import MatchList from "./features/matches/MatchList";
+import StandingsTable from "./features/standings/StandingsTable";
+import BracketView from "./features/bracket/BracketView";
 import { useTournamentStore } from "./store/tournamentStore";
 
 type Tab = "playersPicks" | "matches" | "bracket" | "standings";
@@ -64,9 +67,9 @@ function App() {
               )}
             </div>
           )}
-          {activeTab === "matches" && <p className="text-muted">Mecze — Step 4</p>}
-          {activeTab === "bracket" && <p className="text-muted">Drabinka — Step 4</p>}
-          {activeTab === "standings" && <p className="text-muted">Tabela — Step 4</p>}
+          {activeTab === "matches" && <MatchList />}
+          {activeTab === "bracket" && <BracketView />}
+          {activeTab === "standings" && <StandingsTable />}
         </div>
       </div>
     </div>

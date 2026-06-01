@@ -196,15 +196,18 @@ export const useTournamentStore = create<TournamentStore>()(
               }
             }
 
+            const matchInTournament = tournament.phases
+              .flatMap((p) => p.matches)
+              .find((m) => m.id === pick.matchId);
+            const result = matchInTournament?.result;
+
             let points = 0;
             if (phaseType === 'group') {
-              points = calculateGroupPhasePick(pick, undefined); // TODO: lookup result from tournament.phases when matches implemented
+              points = calculateGroupPhasePick(pick, result);
             } else {
-              points = calculateKnockoutPhasePick(pick, undefined, homeTeam, awayTeam);
+              points = calculateKnockoutPhasePick(pick, result, homeTeam, awayTeam);
             }
 
-            // Note: full impl needs to lookup result from tournament state
-            // For v1 skeleton, points calc is partial - will be wired in later steps
             return { ...pick, points };
           });
         });
