@@ -117,7 +117,7 @@ Users can view and enter match picks for each player through an organized accord
 - Replace the current player/pick list in `App.tsx` with `PlayerPicksSection`.
 - Commit the changes for this step.
 
-### * Step 4: Implement 48-Team Templates and Real Tournament Creator
+### ✓ Step 4: Implement 48-Team Templates and Real Tournament Creator
 The tournament creator supports the 2026 World Cup format (48 teams) and other templates using real data.
 
 - Create `src/data/templates.ts` with `t48` (default), `t32`, `t16`, and `league` definitions.

@@ -1,9 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { useTournamentStore } from "../../store/tournamentStore";
+import { useActiveTournament } from "../../store/tournamentStore";
 
 export default function StandingsTable() {
   const { t } = useTranslation();
-  const { players, matchPicks } = useTournamentStore();
+  const tournament = useActiveTournament();
+  
+  const players = tournament?.players || [];
+  const matchPicks = tournament?.matchPicks || {};
 
   const standings = players
     .map((p) => {

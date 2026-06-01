@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { useTournamentStore } from "../../store/tournamentStore";
+import { useActiveTournament } from "../../store/tournamentStore";
 import ReactFlow, { Background, Controls } from "reactflow";
 import "reactflow/dist/style.css";
 
 export default function BracketView() {
   const { t } = useTranslation();
-  const { tournament } = useTournamentStore();
+  const tournament = useActiveTournament();
 
   if (!tournament) {
     return (

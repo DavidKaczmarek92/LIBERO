@@ -8,6 +8,7 @@ import {
   TournamentPick,
   MatchResult,
   AppState,
+  Country,
 } from '../types';
 import {
   calculateGroupPhasePick,
@@ -17,13 +18,15 @@ import {
 
 interface TournamentStore extends AppState {
   // Actions
-  createTournament: (tournament: Omit<Tournament, 'id' | 'createdAt'>) => void;
+  createTournament: (tournament: Omit<Tournament, 'id' | 'createdAt' | 'players' | 'matchPicks' | 'tournamentPicks'>) => void;
+  setActiveTournament: (id: string | null) => void;
   addPlayer: (name: string) => { success: boolean; error?: string };
   updatePlayer: (id: string, name: string) => { success: boolean; error?: string };
   deletePlayer: (id: string) => void;
   updateMatchResult: (matchId: string, result: MatchResult) => void;
   submitMatchPick: (playerId: string, matchId: string, pick: Omit<MatchPick, 'id' | 'playerId' | 'matchId' | 'points'>) => void;
   submitTournamentPick: (playerId: string, pick: Omit<TournamentPick, 'playerId'>) => void;
+  updateTeams: (teams: Country[]) => void;
   recalculatePoints: () => void;
   loadFromPersistence: () => Promise<void>;
   reset: () => void;
@@ -32,23 +35,34 @@ interface TournamentStore extends AppState {
 export const useTournamentStore = create<TournamentStore>()(
   persist(
     (set, get) => ({
-      tournament: null,
-      players: [],
-      matchPicks: {},
-      tournamentPicks: {},
+      tournaments: [],
+      activeTournamentId: null,
 
       createTournament: (data) => {
         const newTournament: Tournament = {
           ...data,
           id: `t_${Date.now()}`,
+          players: [],
+          matchPicks: {},
+          tournamentPicks: {},
           createdAt: new Date().toISOString(),
         };
-        set({ tournament: newTournament, matchPicks: {}, tournamentPicks: {} });
+        set((state) => ({
+          tournaments: [...state.tournaments, newTournament],
+          activeTournamentId: newTournament.id,
+        }));
+      },
+
+      setActiveTournament: (id) => {
+        set({ activeTournamentId: id });
       },
 
       addPlayer: (name) => {
-        const { players } = get();
-        if (players.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
+        const { tournaments, activeTournamentId } = get();
+        const tournament = tournaments.find(t => t.id === activeTournamentId);
+        if (!tournament) return { success: false, error: 'error.noActiveTournament' };
+
+        if (tournament.players.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
           return { success: false, error: 'error.duplicatePlayer' };
         }
         const newPlayer: Player = {
@@ -56,36 +70,63 @@ export const useTournamentStore = create<TournamentStore>()(
           name,
           createdAt: new Date().toISOString(),
         };
-        set({ players: [...players, newPlayer] });
+
+        set((state) => ({
+          tournaments: state.tournaments.map(t => 
+            t.id === activeTournamentId 
+              ? { ...t, players: [...t.players, newPlayer] }
+              : t
+          )
+        }));
+
         return { success: true };
       },
 
       updatePlayer: (id, name) => {
-        const { players } = get();
-        if (players.some((p) => p.id !== id && p.name.toLowerCase() === name.toLowerCase())) {
+        const { tournaments, activeTournamentId } = get();
+        const tournament = tournaments.find(t => t.id === activeTournamentId);
+        if (!tournament) return { success: false, error: 'error.noActiveTournament' };
+
+        if (tournament.players.some((p) => p.id !== id && p.name.toLowerCase() === name.toLowerCase())) {
           return { success: false, error: 'error.duplicatePlayer' };
         }
-        set({
-          players: players.map((p) => (p.id === id ? { ...p, name } : p)),
-        });
+
+        set((state) => ({
+          tournaments: state.tournaments.map(t => 
+            t.id === activeTournamentId 
+              ? { ...t, players: t.players.map(p => p.id === id ? { ...p, name } : p) }
+              : t
+          )
+        }));
+
         return { success: true };
       },
 
       deletePlayer: (id) => {
-        const { players, matchPicks, tournamentPicks } = get();
-        set({
-          players: players.filter((p) => p.id !== id),
-          matchPicks: Object.fromEntries(
-            Object.entries(matchPicks).filter(([pid]) => pid !== id)
-          ),
-          tournamentPicks: Object.fromEntries(
-            Object.entries(tournamentPicks).filter(([pid]) => pid !== id)
-          ),
-        });
+        const { activeTournamentId } = get();
+        if (!activeTournamentId) return;
+
+        set((state) => ({
+          tournaments: state.tournaments.map(t => {
+            if (t.id !== activeTournamentId) return t;
+            
+            return {
+              ...t,
+              players: t.players.filter((p) => p.id !== id),
+              matchPicks: Object.fromEntries(
+                Object.entries(t.matchPicks).filter(([pid]) => pid !== id)
+              ),
+              tournamentPicks: Object.fromEntries(
+                Object.entries(t.tournamentPicks).filter(([pid]) => pid !== id)
+              ),
+            };
+          })
+        }));
       },
 
       updateMatchResult: (matchId, result) => {
-        const { tournament } = get();
+        const { activeTournamentId, tournaments } = get();
+        const tournament = tournaments.find(t => t.id === activeTournamentId);
         if (!tournament) return;
 
         // Update the result in tournament phases
@@ -96,17 +137,24 @@ export const useTournamentStore = create<TournamentStore>()(
           ),
         }));
 
-        set({
-          tournament: { ...tournament, phases: updatedPhases },
-        });
+        set((state) => ({
+          tournaments: state.tournaments.map(t => 
+            t.id === activeTournamentId 
+              ? { ...t, phases: updatedPhases }
+              : t
+          )
+        }));
 
         // Trigger recalc
         get().recalculatePoints();
       },
 
       submitMatchPick: (playerId, matchId, pickData) => {
-        const { matchPicks } = get();
-        const picksForPlayer = matchPicks[playerId] || [];
+        const { activeTournamentId, tournaments } = get();
+        const tournament = tournaments.find(t => t.id === activeTournamentId);
+        if (!tournament) return;
+
+        const picksForPlayer = tournament.matchPicks[playerId] || [];
         const existingIndex = picksForPlayer.findIndex((p) => p.matchId === matchId);
 
         const newPick: MatchPick = {
@@ -125,33 +173,64 @@ export const useTournamentStore = create<TournamentStore>()(
           updatedPicks = [...picksForPlayer, newPick];
         }
 
-        set({
-          matchPicks: {
-            ...matchPicks,
-            [playerId]: updatedPicks,
-          },
-        });
+        set((state) => ({
+          tournaments: state.tournaments.map(t => 
+            t.id === activeTournamentId 
+              ? { 
+                  ...t, 
+                  matchPicks: {
+                    ...t.matchPicks,
+                    [playerId]: updatedPicks,
+                  } 
+                }
+              : t
+          )
+        }));
 
         get().recalculatePoints();
       },
 
       submitTournamentPick: (playerId, pickData) => {
-        set({
-          tournamentPicks: {
-            ...get().tournamentPicks,
-            [playerId]: { playerId, ...pickData },
-          },
-        });
+        const { activeTournamentId } = get();
+        if (!activeTournamentId) return;
+
+        set((state) => ({
+          tournaments: state.tournaments.map(t => 
+            t.id === activeTournamentId 
+              ? { 
+                  ...t, 
+                  tournamentPicks: {
+                    ...t.tournamentPicks,
+                    [playerId]: { playerId, ...pickData },
+                  } 
+                }
+              : t
+          )
+        }));
+      },
+
+      updateTeams: (teams) => {
+        const { activeTournamentId } = get();
+        if (!activeTournamentId) return;
+
+        set((state) => ({
+          tournaments: state.tournaments.map(t => 
+            t.id === activeTournamentId 
+              ? { ...t, teams }
+              : t
+          )
+        }));
       },
 
       recalculatePoints: () => {
-        const { matchPicks, tournament } = get();
+        const { tournaments, activeTournamentId } = get();
+        const tournament = tournaments.find(t => t.id === activeTournamentId);
         if (!tournament) return;
 
         const updatedMatchPicks: Record<string, MatchPick[]> = {};
 
-        Object.keys(matchPicks).forEach((playerId) => {
-          updatedMatchPicks[playerId] = matchPicks[playerId].map((pick) => {
+        Object.keys(tournament.matchPicks).forEach((playerId) => {
+          updatedMatchPicks[playerId] = tournament.matchPicks[playerId].map((pick) => {
             // Find the match to get home/away for KO logic
             let homeTeam = '';
             let awayTeam = '';
@@ -183,7 +262,13 @@ export const useTournamentStore = create<TournamentStore>()(
           });
         });
 
-        set({ matchPicks: updatedMatchPicks });
+        set((state) => ({
+          tournaments: state.tournaments.map(t => 
+            t.id === activeTournamentId 
+              ? { ...t, matchPicks: updatedMatchPicks }
+              : t
+          )
+        }));
       },
 
       loadFromPersistence: async () => {
@@ -192,10 +277,8 @@ export const useTournamentStore = create<TournamentStore>()(
 
       reset: () => {
         set({
-          tournament: null,
-          players: [],
-          matchPicks: {},
-          tournamentPicks: {},
+          tournaments: [],
+          activeTournamentId: null,
         });
       },
     }),
@@ -203,10 +286,8 @@ export const useTournamentStore = create<TournamentStore>()(
       name: 'libero-tournament-state',
       storage: createJSONStorage(() => appStorage),
       partialize: (state) => ({
-        tournament: state.tournament,
-        players: state.players,
-        matchPicks: state.matchPicks,
-        tournamentPicks: state.tournamentPicks,
+        tournaments: state.tournaments,
+        activeTournamentId: state.activeTournamentId,
       }),
     }
   )
@@ -217,3 +298,9 @@ export async function initializeStore() {
   // tauri store auto loads on first get in persist
   // additional init if needed
 }
+
+export const useActiveTournament = () => {
+  const tournaments = useTournamentStore((state) => state.tournaments);
+  const activeTournamentId = useTournamentStore((state) => state.activeTournamentId);
+  return tournaments.find((t) => t.id === activeTournamentId) || null;
+};

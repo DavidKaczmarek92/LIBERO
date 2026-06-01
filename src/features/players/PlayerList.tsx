@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus, Edit2, Trash2 } from "lucide-react";
-import { useTournamentStore } from "../../store/tournamentStore";
+import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
 import { Player } from "../../types";
 import PlayerForm from "./PlayerForm";
 
 export default function PlayerList() {
   const { t } = useTranslation();
-  const { players, addPlayer, updatePlayer, deletePlayer } = useTournamentStore();
+  const activeTournament = useActiveTournament();
+  const { addPlayer, updatePlayer, deletePlayer } = useTournamentStore();
+  
+  const players = activeTournament?.players || [];
   const [showForm, setShowForm] = useState(false);
   const [editingPlayer, setEditingPlayer] = useState<Player | undefined>(undefined);
 
