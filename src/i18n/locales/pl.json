@@ -30,5 +30,12 @@
   "common.delete": "Usuń",
   "common.error": "Błąd",
   "error.tournamentName": "Nazwa turnieju jest wymagana",
-  "error.duplicatePlayer": "Gracz o tej nazwie już istnieje"
+  "error.duplicatePlayer": "Gracz o tej nazwie już istnieje",
+  "tournament.title": "Utwórz turniej",
+  "tournament.name": "Nazwa turnieju",
+  "tournament.template": "Szablon",
+  "tournament.create": "Utwórz turniej",
+  "tournament.groups": "Grupy fazy grupowej",
+  "tournament.knockout": "Fazy pucharowe",
+  "tournament.selectTemplate": "Wybierz szablon"
 }

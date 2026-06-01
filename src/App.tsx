@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./App.css";
+import TournamentCreator from "./features/tournament/TournamentCreator";
+import PlayerList from "./features/players/PlayerList";
+import TournamentPickForm from "./features/picks/TournamentPickForm";
+import { useTournamentStore } from "./store/tournamentStore";
 
 type Tab = "playersPicks" | "matches" | "bracket" | "standings";
 
 function App() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>("playersPicks");
+  const { players, tournamentPicks } = useTournamentStore();
 
   const tabs: { id: Tab; label: string }[] = [
     { id: "playersPicks", label: t("tabs.playersPicks") },
@@ -41,8 +46,22 @@ function App() {
           </div>
 
           {activeTab === "playersPicks" && (
-            <div>
-              <p className="text-muted">Gracze i typowania — see features/players and features/picks (Step 3)</p>
+            <div className="space-y-6">
+              <TournamentCreator />
+              <PlayerList />
+              {players.length > 0 && (
+                <div>
+                  <div className="panel-head mb-3"><h3>{t("picks.title")}</h3></div>
+                  {players.map((player) => (
+                    <TournamentPickForm
+                      key={player.id}
+                      playerId={player.id}
+                      pick={tournamentPicks[player.id]}
+                      onSubmit={() => {}}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           )}
           {activeTab === "matches" && <p className="text-muted">Mecze — Step 4</p>}
