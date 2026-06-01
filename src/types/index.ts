@@ -1,93 +1,51 @@
-// Data models per RFC §7 (adapted for v1 implementation)
+// src/types/index.ts
 
-export interface Country {
-  id: string;
-  name: string;
-  flag: string;
-}
+export type Phase = 'group' | 'r32' | 'r16' | 'qf' | 'sf' | 'final';
 
 export interface Player {
-  id: string;
+  id: number;
   name: string;
-  createdAt: string;
 }
 
-export interface MatchResult {
-  homeGoals: number;
-  awayGoals: number;
-  extraTime?: {
-    homeGoals: number;
-    awayGoals: number;
-  };
-  penalties?: {
-    winner: string;
-  };
+export interface Team {
+  id: number;
+  name: string;
+  groupLabel: string;
 }
 
 export interface Match {
-  id: string;
-  phaseId: string;
+  id: number;
+  phase: Phase;
   groupLabel?: string;
-  homeTeam: string; // country id
-  awayTeam: string; // country id
-  result?: MatchResult;
+  homeTeamId: number | null;
+  awayTeamId: number | null;
+  homeGoals: number | null;
+  awayGoals: number | null;
+  extraTimeWinnerId: number | null;
+  matchDate?: string;
+  matchOrder: number;
 }
 
-export interface MatchPick {
-  id: string;
-  playerId: string;
-  matchId: string;
+export interface Pick {
+  id: number;
+  playerId: number;
+  matchId: number;
   homeGoals: number;
   awayGoals: number;
-  knockoutWinner?: string; // country id, for knockout matches
-  points?: number; // calculated
+  extraTimeWinnerId: number | null;
+  points: number;
 }
 
 export interface TournamentPick {
-  playerId: string;
-  champion: string; // country id
-  topScorer: string; // country id or player name?
+  playerId: number;
+  championTeamId: number | null;
+  topScorerName: string;
 }
 
-export interface TournamentPhase {
-  id: string;
-  name: string;
-  label: string;
-  isKnockout: boolean;
-  allowDraw: boolean;
-  order: number;
-  matches: Match[];
-}
-
-export interface TournamentTemplate {
-  id: string;
-  name: string;
-  description?: string;
-}
-
-export interface Tournament {
-  id: string;
-  name: string;
-  templateId: string;
-  teams: Country[];
-  groups: Record<string, string[]>;
-  phases: TournamentPhase[];
-  players: Player[];
-  matchPicks: Record<string, MatchPick[]>;
-  tournamentPicks: Record<string, TournamentPick>;
-  createdAt: string;
-}
-
-// Built-in templates per plan
-export const BUILT_IN_TEMPLATES: TournamentTemplate[] = [
-  { id: 'wc32', name: 'World Cup 32', description: 'Tradycyjny format 32 drużyn, 8 grup po 4 zespoły.' },
-  { id: 'wc16', name: 'World Cup 16', description: 'Skrócony format, 16 drużyn w 4 grupach.' },
-  { id: 'league', name: 'League', description: 'System ligowy „każdy z każdym”.' },
-  { id: 'custom', name: 'Custom', description: 'Stwórz własny unikalny format rozgrywek.' },
-];
-
-// Store state shape (for Zustand)
-export interface AppState {
-  tournaments: Tournament[];
-  activeTournamentId: string | null;
+export interface Standing {
+  player: Player;
+  totalPoints: number;
+  rank: number;
+  championCorrect: boolean;
+  topScorerCorrect: boolean;
 }

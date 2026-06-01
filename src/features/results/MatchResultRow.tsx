@@ -1,39 +1,46 @@
-// src/features/picks/MatchPickRow.tsx
+// src/features/results/MatchResultRow.tsx
 import React from 'react';
-import { Match, Pick, Team } from '../../types';
+import { Match, Team } from '../../types';
+import { teamFlag } from '../../utils/flags';
 
 interface Props {
   match: Match;
-  pick: Pick | undefined;
   teams: Team[];
-  onSave: (homeGoals: number, awayGoals: number, extraTimeWinnerId: number | null) => void;
+  onSave: (homeGoals: number | null, awayGoals: number | null, extraTimeWinnerId: number | null) => void;
 }
 
-export const MatchPickRow: React.FC<Props> = ({ match, pick, teams, onSave }) => {
+export const MatchResultRow: React.FC<Props> = ({ match, teams, onSave }) => {
   const homeTeam = teams.find(t => t.id === match.homeTeamId);
   const awayTeam = teams.find(t => t.id === match.awayTeamId);
 
-  const [homeGoals, setHomeGoals] = React.useState(pick?.homeGoals ?? 0);
-  const [awayGoals, setAwayGoals] = React.useState(pick?.awayGoals ?? 0);
-  const [etWinner, setEtWinner] = React.useState<number | null>(pick?.extraTimeWinnerId ?? null);
+  const [homeGoals, setHomeGoals] = React.useState<number | ''>(match.homeGoals ?? '');
+  const [awayGoals, setAwayGoals] = React.useState<number | ''>(match.awayGoals ?? '');
+  const [etWinner, setEtWinner] = React.useState<number | null>(match.extraTimeWinnerId ?? null);
 
   const isKnockout = match.phase !== 'group';
-  const isDraw = homeGoals === awayGoals;
+  const isDraw = homeGoals !== '' && awayGoals !== '' && homeGoals === awayGoals;
 
   const handleSave = () => {
-    onSave(homeGoals, awayGoals, isKnockout && isDraw ? etWinner : null);
+    onSave(
+      homeGoals === '' ? null : homeGoals,
+      awayGoals === '' ? null : awayGoals,
+      isKnockout && isDraw ? etWinner : null
+    );
   };
 
   return (
     <div className="bg-slate-900 border border-slate-700 rounded-lg p-3 flex flex-wrap items-center gap-4">
       <div className="flex-1 flex items-center justify-between min-w-[300px]">
-        <span className="w-1/3 text-right font-medium text-slate-200">{homeTeam?.name ?? 'TBD'}</span>
+        <span className="w-1/3 text-right font-medium text-slate-200 flex items-center justify-end gap-1.5">
+          <span>{homeTeam?.name ?? 'TBD'}</span>
+          <span className="text-lg">{teamFlag(homeTeam?.name)}</span>
+        </span>
         <div className="flex items-center gap-2 px-4">
           <input
             type="number"
             min="0"
             value={homeGoals}
-            onChange={(e) => setHomeGoals(parseInt(e.target.value) || 0)}
+            onChange={(e) => setHomeGoals(e.target.value === '' ? '' : parseInt(e.target.value))}
             className="bg-slate-700 border border-slate-600 rounded px-2 py-1 w-12 text-center text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
           <span className="text-slate-500">:</span>
@@ -41,16 +48,19 @@ export const MatchPickRow: React.FC<Props> = ({ match, pick, teams, onSave }) =>
             type="number"
             min="0"
             value={awayGoals}
-            onChange={(e) => setAwayGoals(parseInt(e.target.value) || 0)}
+            onChange={(e) => setAwayGoals(e.target.value === '' ? '' : parseInt(e.target.value))}
             className="bg-slate-700 border border-slate-600 rounded px-2 py-1 w-12 text-center text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
           />
         </div>
-        <span className="w-1/3 text-left font-medium text-slate-200">{awayTeam?.name ?? 'TBD'}</span>
+        <span className="w-1/3 text-left font-medium text-slate-200 flex items-center gap-1.5">
+          <span className="text-lg">{teamFlag(awayTeam?.name)}</span>
+          <span>{awayTeam?.name ?? 'TBD'}</span>
+        </span>
       </div>
 
       {isKnockout && isDraw && (
         <div className="flex items-center gap-2">
-          <span className="text-xs text-slate-400 uppercase font-bold">Zwycięzca dogrywki:</span>
+          <span className="text-xs text-slate-400 uppercase font-bold">Zwycięzca:</span>
           <select
             value={etWinner ?? ''}
             onChange={(e) => setEtWinner(parseInt(e.target.value) || null)}
@@ -65,20 +75,10 @@ export const MatchPickRow: React.FC<Props> = ({ match, pick, teams, onSave }) =>
 
       <button
         onClick={handleSave}
-        className="ml-auto bg-slate-700 hover:bg-indigo-600 text-white text-xs rounded px-3 py-1.5 transition-colors uppercase font-bold tracking-wider"
+        className="ml-auto bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded px-3 py-1.5 transition-colors uppercase font-bold tracking-wider"
       >
-        Zapisz
+        Zapisz wynik
       </button>
-
-      {pick && match.homeGoals !== null && (
-        <div className={`ml-2 px-2 py-1 rounded text-xs font-bold ${
-          pick.points === 3 ? 'bg-yellow-500/20 text-yellow-400' : 
-          pick.points >= 1 ? 'bg-green-500/20 text-green-400' : 
-          'bg-slate-500/20 text-slate-500'
-        }`}>
-          {pick.points} PTS
-        </div>
-      )}
     </div>
   );
 };
