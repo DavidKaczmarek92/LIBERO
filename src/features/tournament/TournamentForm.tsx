@@ -23,30 +23,45 @@ export default function TournamentForm({ template, onCreate, onCancel }: Tournam
   };
 
   return (
-    <div className="panel mt-6">
-      <div className="panel-head">
-        <h3>{t("tournament.title")}</h3>
+    <div className="bg-surface border border-border rounded-2xl p-6 shadow-sm mt-6 animate-in fade-in slide-in-from-top-4 duration-300">
+      <div className="mb-6">
+        <h3 className="font-disp text-xl font-bold">{t("tournament.title")}</h3>
+        <p className="text-sm text-text-faint mt-1">Skonfiguruj nazwę dla wybranego formatu.</p>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-6">
         <div>
-          <label className="block text-sm font-semibold mb-1.5">{t("tournament.name")}</label>
+          <label className="block text-sm font-bold text-text-muted mb-2">{t("tournament.name")}</label>
           <input
             type="text"
             value={name}
             onChange={(e) => { setName(e.target.value); setError(null); }}
-            className="w-full bg-inset border border-border rounded-[var(--radius-sm)] px-4 py-2.5 text-[15px]"
-            placeholder="MŚ 2026 Libero"
+            className="w-full bg-inset border border-border rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue transition-all"
+            placeholder="np. Libero Cup 2026"
           />
-          {error && <div className="text-red-fg text-sm mt-1">{error}</div>}
+          {error && (
+            <div className="bg-red-50 text-red-fg text-xs font-bold px-3 py-2 rounded-lg border border-red-100 mt-2">
+              {error}
+            </div>
+          )}
         </div>
         {template && (
-          <div className="text-sm text-text-muted">
-            Szablon: <span className="font-medium text-text">{template.name}</span>
+          <div className="flex items-center gap-2 bg-blue-soft/30 px-4 py-3 rounded-xl border border-blue-soft">
+            <div className="text-xs font-bold text-blue uppercase tracking-wider">Szablon:</div>
+            <div className="font-bold text-text">{template.name}</div>
           </div>
         )}
         <div className="flex gap-3 pt-2">
-          <button onClick={onCancel} className="btn btn-ghost flex-1">{t("common.cancel")}</button>
-          <button onClick={handleCreate} className="btn btn-primary flex-1" disabled={!name.trim() || !template}>
+          <button
+            onClick={onCancel}
+            className="flex-1 px-4 py-3 border border-border text-text font-bold rounded-xl hover:bg-surface-2 transition-colors"
+          >
+            {t("common.cancel")}
+          </button>
+          <button
+            onClick={handleCreate}
+            className="flex-1 px-4 py-3 bg-green text-white font-bold rounded-xl hover:bg-green/90 transition-all shadow-lg shadow-green/20 disabled:opacity-50 disabled:shadow-none"
+            disabled={!name.trim() || !template}
+          >
             {t("tournament.create")}
           </button>
         </div>

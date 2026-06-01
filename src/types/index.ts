@@ -75,10 +75,10 @@ export interface Tournament {
 
 // Built-in templates per plan
 export const BUILT_IN_TEMPLATES: TournamentTemplate[] = [
-  { id: 'wc32', name: 'World Cup 32' },
-  { id: 'wc16', name: 'World Cup 16' },
-  { id: 'league', name: 'League' },
-  { id: 'custom', name: 'Custom' },
+  { id: 'wc32', name: 'World Cup 32', description: 'Tradycyjny format 32 drużyn, 8 grup po 4 zespoły.' },
+  { id: 'wc16', name: 'World Cup 16', description: 'Skrócony format, 16 drużyn w 4 grupach.' },
+  { id: 'league', name: 'League', description: 'System ligowy „każdy z każdym”.' },
+  { id: 'custom', name: 'Custom', description: 'Stwórz własny unikalny format rozgrywek.' },
 ];
 
 // Store state shape (for Zustand)
