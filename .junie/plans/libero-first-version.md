@@ -171,7 +171,7 @@ Tauri + React + TypeScript + Tailwind + React Flow project is bootstrapped with 
 - Add Tailwind and React Flow dependencies and initial CSS imports.
 - Create placeholder `src/App.tsx` and `src-tauri/tauri.conf.json` with Polish window title.
 
-### * Step 2: implement-core-infrastructure
+### ✓ Step 2: implement-core-infrastructure
 Types, i18n, scoring utilities, and Zustand store with persistence are implemented and testable.
 
 - Create `src/types/index.ts` containing all interfaces from RFC §7 (Country, Player, Match, MatchResult, MatchPick, TournamentPick, Tournament, TournamentPhase, TournamentTemplate) plus BUILT_IN_TEMPLATES constant.
@@ -180,7 +180,7 @@ Types, i18n, scoring utilities, and Zustand store with persistence are implement
 - Create `src/store/tournamentStore.ts` (and related slices) using Zustand + tauri-plugin-store persistence; include actions for createTournament, addPlayer, updateMatchResult, submitPick, recalculatePoints.
 - Add helper `src/utils/winnerPropagation.ts` skeleton for bracket logic (RFC 6.4).
 
-###   Step 3: build-tournament-players-and-picks
+### * Step 3: build-tournament-players-and-picks
 Tournament creation (template + React Flow groups/phases), player management, and tournament/match picks are fully functional with Polish UI.
 
 - Implement `src/features/tournament/` components: TemplateSelector, TournamentForm, TournamentCreator (React Flow canvas for groups and phase headers) matching mock HTML layout.

@@ -1,28 +1,53 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./App.css";
 
+type Tab = "playersPicks" | "matches" | "bracket" | "standings";
+
 function App() {
+  const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState<Tab>("playersPicks");
+
+  const tabs: { id: Tab; label: string }[] = [
+    { id: "playersPicks", label: t("tabs.playersPicks") },
+    { id: "matches", label: t("tabs.matches") },
+    { id: "bracket", label: t("tabs.bracket") },
+    { id: "standings", label: t("tabs.standings") },
+  ];
+
   return (
     <div className="min-h-screen bg-canvas text-text">
-      <div className="win" style={{ maxWidth: '1200px', margin: '40px auto' }}>
+      <div className="win" style={{ maxWidth: "1200px", margin: "40px auto" }}>
         <div className="win-bar">
           <div className="lights"><i></i><i></i><i></i></div>
           <div className="win-title">LIBERO</div>
         </div>
         <div className="win-body p-6">
           <div className="app-head mb-6">
-            <div className="ttl"><h2>LIBERO — Typowania MŚ 2026</h2></div>
-            <div className="tag">MŚ<br/>2026</div>
+            <div className="ttl"><h2>{t("app.title")}</h2></div>
+            <div className="tag">{t("app.tag")}</div>
           </div>
 
-          {/* Placeholder tabs matching mock */}
           <div className="flex gap-2 mb-4 border-b border-border pb-2">
-            <button className="tab active">Gracze i typowania</button>
-            <button className="tab">Mecze</button>
-            <button className="tab">Drabinka</button>
-            <button className="tab">Tabela</button>
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                className={`tab ${activeTab === tab.id ? "active" : ""}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
 
-          <p className="text-muted">Placeholder for v1 implementation. See plan Step 3 for full UI.</p>
+          {activeTab === "playersPicks" && (
+            <div>
+              <p className="text-muted">Gracze i typowania — see features/players and features/picks (Step 3)</p>
+            </div>
+          )}
+          {activeTab === "matches" && <p className="text-muted">Mecze — Step 4</p>}
+          {activeTab === "bracket" && <p className="text-muted">Drabinka — Step 4</p>}
+          {activeTab === "standings" && <p className="text-muted">Tabela — Step 4</p>}
         </div>
       </div>
     </div>
