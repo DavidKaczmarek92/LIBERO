@@ -32,15 +32,15 @@ export const TournamentPickForm: React.FC<Props> = ({ playerId, teams }) => {
   };
 
   return (
-    <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 space-y-4">
-      <h3 className="text-lg font-bold text-white uppercase tracking-wider">Typy turniejowe</h3>
+    <div className="bg-gray-800 rounded-xl p-6 border border-gray-700 space-y-4">
+      <h3 className="text-base font-bold text-white uppercase tracking-widest text-gray-300">🏆 Typy turniejowe</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-400">Typowany mistrz</label>
+          <label className="block text-sm font-medium text-gray-400">Typowany mistrz</label>
           <select
             value={championTeamId ?? ''}
             onChange={(e) => setChampionTeamId(parseInt(e.target.value) || null)}
-            className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             <option value="">Wybierz drużynę...</option>
             {teams.map(t => (
@@ -49,20 +49,20 @@ export const TournamentPickForm: React.FC<Props> = ({ playerId, teams }) => {
           </select>
         </div>
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-slate-400">Typowany król strzelców</label>
+          <label className="block text-sm font-medium text-gray-400">Typowany król strzelców</label>
           <input
             type="text"
             value={topScorer}
             onChange={(e) => setTopScorer(e.target.value)}
             placeholder="Imię i nazwisko zawodnika..."
-            className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-500"
           />
         </div>
       </div>
       <div className="flex justify-end pt-2">
         <button
           onClick={handleSave}
-          className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-6 py-2 font-medium transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-6 py-2.5 font-semibold transition-colors"
         >
           Zapisz typy turniejowe
         </button>

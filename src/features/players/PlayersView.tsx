@@ -43,11 +43,11 @@ export const PlayersView: React.FC = () => {
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           placeholder="Imię i nazwisko gracza..."
-          className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 placeholder-gray-500"
         />
         <button
           type="submit"
-          className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-6 py-2 font-medium transition-colors"
+          className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-6 py-2.5 font-semibold transition-colors"
         >
           Dodaj gracza
         </button>
@@ -55,11 +55,11 @@ export const PlayersView: React.FC = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {players.map((player) => (
-          <div key={player.id} className="bg-slate-800 rounded-xl p-4 shadow-lg flex justify-between items-center border border-slate-700">
-            <span className="text-lg font-medium text-white">{player.name}</span>
+          <div key={player.id} className="bg-gray-800 rounded-xl p-4 shadow-md flex justify-between items-center border border-gray-700 hover:border-gray-600 transition-colors">
+            <span className="text-base font-semibold text-white">{player.name}</span>
             <button
               onClick={() => handleDelete(player.id)}
-              className="text-slate-400 hover:text-red-400 p-2 transition-colors"
+              className="text-gray-500 hover:text-red-400 p-2 transition-colors rounded-lg hover:bg-red-400/10"
               title="Usuń gracza"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -69,7 +69,7 @@ export const PlayersView: React.FC = () => {
           </div>
         ))}
         {players.length === 0 && (
-          <div className="col-span-full text-center py-8 text-slate-500 italic">
+          <div className="col-span-full text-center py-12 text-gray-500 italic">
             Brak graczy. Dodaj pierwszego gracza powyżej.
           </div>
         )}

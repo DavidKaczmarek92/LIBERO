@@ -57,7 +57,7 @@ export const PicksView: React.FC = () => {
   return (
     <div className="space-y-8">
       <div className="space-y-2">
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Wybierz gracza</p>
+        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest pl-1">Wybierz gracza</p>
         <div className="flex flex-wrap gap-2">
           {players.map(p => (
             <button
@@ -65,15 +65,15 @@ export const PicksView: React.FC = () => {
               onClick={() => setSelectedPlayerId(p.id === selectedPlayerId ? null : p.id)}
               className={`px-4 py-2 rounded-xl text-sm font-semibold border transition-all ${
                 selectedPlayerId === p.id
-                  ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-900/40'
-                  : 'bg-slate-800 border-slate-700 text-slate-300 hover:border-indigo-500/50 hover:text-white'
+                  ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg'
+                  : 'bg-gray-800 border-gray-700 text-gray-300 hover:border-indigo-500 hover:text-white'
               }`}
             >
               {p.name}
             </button>
           ))}
           {players.length === 0 && (
-            <p className="text-slate-600 text-sm">Brak graczy — dodaj ich w zakładce Gracze.</p>
+            <p className="text-gray-500 text-sm">Brak graczy — dodaj ich w zakładce Gracze.</p>
           )}
         </div>
       </div>
@@ -88,7 +88,7 @@ export const PicksView: React.FC = () => {
 
             return (
               <div key={`${p.phase}-${p.group ?? ''}`} className="space-y-4">
-                <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest pl-2">{p.label}</h3>
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1 border-l-2 border-indigo-500 pl-3">{p.label}</h3>
                 <div className="grid grid-cols-1 gap-2">
                   {phaseMatches.map(m => (
                     <MatchPickRow
@@ -107,7 +107,7 @@ export const PicksView: React.FC = () => {
       )}
 
       {!selectedPlayerId && (
-        <div className="text-center py-20 text-slate-600">
+        <div className="text-center py-20 text-gray-600">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
