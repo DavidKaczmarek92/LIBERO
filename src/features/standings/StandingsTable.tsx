@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
+import { useActiveTournament } from "../../store/tournamentStore";
 
 export default function StandingsTable() {
   const { t } = useTranslation();

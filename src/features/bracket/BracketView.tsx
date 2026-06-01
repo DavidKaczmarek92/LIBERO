@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
+import { useActiveTournament } from "../../store/tournamentStore";
 import ReactFlow, { Background, Controls } from "reactflow";
 import "reactflow/dist/style.css";
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp, User, Trophy, FileText } from "lucide-react";
-import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
+import { useActiveTournament } from "../../store/tournamentStore";
 import MatchPickRow from "./MatchPickRow";
 import TournamentPickForm from "./TournamentPickForm";
 
