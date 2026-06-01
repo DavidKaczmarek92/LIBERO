@@ -3,14 +3,15 @@ import { useTranslation } from "react-i18next";
 import ReactFlow, { Background, Controls, MiniMap } from "reactflow";
 import "reactflow/dist/style.css";
 import { useTournamentStore } from "../../store/tournamentStore";
-import { TournamentTemplate } from "../../types";
+import { TemplateDefinition, TOURNAMENT_TEMPLATES, generatePhasesFromTemplate } from "../../data/templates";
+import { COUNTRIES } from "../../data/countries";
 import TemplateSelector from "./TemplateSelector";
 import TournamentForm from "./TournamentForm";
 
 export default function TournamentCreator() {
   const { t } = useTranslation();
   const { tournament, createTournament } = useTournamentStore();
-  const [selectedTemplate, setSelectedTemplate] = useState<TournamentTemplate | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<TemplateDefinition | null>(null);
   const [showForm, setShowForm] = useState(false);
 
   if (tournament) {
@@ -19,17 +20,17 @@ export default function TournamentCreator() {
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-disp text-lg font-bold">{tournament.name}</h3>
           <span className="bg-green-soft text-green-fg text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-            Utworzony
+            Aktywny
           </span>
         </div>
         <div className="text-sm text-text-muted">
-          Fazy: {tournament.phases.length} • Grupy gotowe do typowania.
+          Format: <span className="font-bold">{tournament.templateId}</span> • Fazy: {tournament.phases.length} • Drużyny: {tournament.countries.length}
         </div>
       </div>
     );
   }
 
-  const handleSelectTemplate = (tpl: TournamentTemplate) => {
+  const handleSelectTemplate = (tpl: TemplateDefinition) => {
     if (selectedTemplate?.id === tpl.id) {
       setSelectedTemplate(null);
       setShowForm(false);
@@ -40,36 +41,33 @@ export default function TournamentCreator() {
   };
 
   const handleCreate = (name: string, templateId: string) => {
-    // minimal valid tournament data (groups + phases) for demo
-    const demoPhases: any[] = [
-      {
-        id: "group-a",
-        name: "Grupa A",
-        label: "Faza grupowa",
-        isKnockout: false,
-        allowDraw: true,
-        order: 1,
-        matches: [
-          { id: `m1`, phaseId: "group-a", homeTeam: "PL", awayTeam: "DE", result: undefined },
-          { id: `m2`, phaseId: "group-a", homeTeam: "FR", awayTeam: "ES", result: undefined },
-        ],
-      },
-      {
-        id: "final",
-        name: "Finał",
-        label: "Finał",
-        isKnockout: true,
-        allowDraw: false,
-        order: 2,
-        matches: [{ id: `mf`, phaseId: "final", homeTeam: "PL", awayTeam: "FR", result: undefined }],
-      },
-    ];
+    if (!selectedTemplate) return;
+
+    // Use default countries for now (first N from the list)
+    const requiredTeams = selectedTemplate.id === "league" 
+      ? selectedTemplate.teamsPerGroup 
+      : selectedTemplate.groupCount * selectedTemplate.teamsPerGroup;
+    
+    const selectedTeams = COUNTRIES.slice(0, requiredTeams).map(c => c.id);
+
+    const phases = generatePhasesFromTemplate(selectedTemplate, selectedTeams);
+
+    const groups: Record<string, string[]> = {};
+    if (selectedTemplate.id !== "league") {
+      for (let i = 0; i < selectedTemplate.groupCount; i++) {
+        const groupLabel = String.fromCharCode(65 + i);
+        groups[groupLabel] = selectedTeams.slice(i * selectedTemplate.teamsPerGroup, (i + 1) * selectedTemplate.teamsPerGroup);
+      }
+    } else {
+      groups["L"] = selectedTeams;
+    }
+
     createTournament({
       name,
       templateId,
-      countries: ["PL", "DE", "FR", "ES"],
-      groups: { A: ["PL", "DE", "FR", "ES"] },
-      phases: demoPhases,
+      countries: selectedTeams,
+      groups,
+      phases,
     });
     setShowForm(false);
     setSelectedTemplate(null);
