@@ -52,7 +52,10 @@ export interface TournamentPick {
 export interface TournamentPhase {
   id: string;
   name: string;
-  type: 'group' | 'round_of_16' | 'quarter' | 'semi' | 'final';
+  label: string;
+  isKnockout: boolean;
+  allowDraw: boolean;
+  order: number;
   matches: Match[];
 }
 

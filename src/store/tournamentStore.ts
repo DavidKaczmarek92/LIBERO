@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
-import { createStore, Store } from '@tauri-apps/plugin-store';
+import { persist, createJSONStorage } from 'zustand/middleware';
+import { appStorage } from './storage';
 import {
   Player,
   Tournament,
@@ -14,35 +14,6 @@ import {
   calculateKnockoutPhasePick,
 } from '../utils/scoring';
 
-// Tauri store instance for persistence (file: libero.store in app data dir)
-let tauriStore: Store | null = null;
-
-async function getTauriStore(): Promise<Store> {
-  if (!tauriStore) {
-    tauriStore = await createStore('libero.store');
-  }
-  return tauriStore;
-}
-
-// Custom storage adapter for Zustand persist using @tauri-apps/plugin-store
-const tauriStorage: StateStorage = {
-  getItem: async (name: string): Promise<string | null> => {
-    const store = await getTauriStore();
-    const data = await store.get(name);
-    return data ? JSON.stringify(data) : null;
-  },
-  setItem: async (name: string, value: string): Promise<void> => {
-    const store = await getTauriStore();
-    const parsed = JSON.parse(value);
-    await store.set(name, parsed);
-    await store.save();
-  },
-  removeItem: async (name: string): Promise<void> => {
-    const store = await getTauriStore();
-    await store.delete(name);
-    await store.save();
-  },
-};
 
 interface TournamentStore extends AppState {
   // Actions
@@ -50,7 +21,7 @@ interface TournamentStore extends AppState {
   addPlayer: (name: string) => { success: boolean; error?: string };
   updatePlayer: (id: string, name: string) => { success: boolean; error?: string };
   deletePlayer: (id: string) => void;
-  updateMatchResult: (matchId: string, result: MatchResult, phaseType?: 'group' | 'knockout') => void;
+  updateMatchResult: (matchId: string, result: MatchResult) => void;
   submitMatchPick: (playerId: string, matchId: string, pick: Omit<MatchPick, 'id' | 'playerId' | 'matchId' | 'points'>) => void;
   submitTournamentPick: (playerId: string, pick: Omit<TournamentPick, 'playerId'>) => void;
   recalculatePoints: () => void;
@@ -113,7 +84,7 @@ export const useTournamentStore = create<TournamentStore>()(
         });
       },
 
-      updateMatchResult: (matchId, result, _phaseType = 'group') => {
+      updateMatchResult: (matchId, result) => {
         const { tournament } = get();
         if (!tournament) return;
 
@@ -184,14 +155,14 @@ export const useTournamentStore = create<TournamentStore>()(
             // Find the match to get home/away for KO logic
             let homeTeam = '';
             let awayTeam = '';
-            let phaseType: 'group' | 'knockout' = 'group';
+            let isKnockout = false;
 
             for (const phase of tournament.phases) {
               const match = phase.matches.find((m) => m.id === pick.matchId);
               if (match) {
                 homeTeam = match.homeTeam;
                 awayTeam = match.awayTeam;
-                phaseType = phase.type === 'group' ? 'group' : 'knockout';
+                isKnockout = phase.isKnockout;
                 break;
               }
             }
@@ -202,7 +173,7 @@ export const useTournamentStore = create<TournamentStore>()(
             const result = matchInTournament?.result;
 
             let points = 0;
-            if (phaseType === 'group') {
+            if (!isKnockout) {
               points = calculateGroupPhasePick(pick, result);
             } else {
               points = calculateKnockoutPhasePick(pick, result, homeTeam, awayTeam);
@@ -230,7 +201,7 @@ export const useTournamentStore = create<TournamentStore>()(
     }),
     {
       name: 'libero-tournament-state',
-      storage: createJSONStorage(() => tauriStorage),
+      storage: createJSONStorage(() => appStorage),
       partialize: (state) => ({
         tournament: state.tournament,
         players: state.players,

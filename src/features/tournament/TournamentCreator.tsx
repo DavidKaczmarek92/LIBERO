@@ -45,7 +45,10 @@ export default function TournamentCreator() {
       {
         id: "group-a",
         name: "Grupa A",
-        type: "group",
+        label: "Faza grupowa",
+        isKnockout: false,
+        allowDraw: true,
+        order: 1,
         matches: [
           { id: `m1`, phaseId: "group-a", homeTeam: "PL", awayTeam: "DE", result: undefined },
           { id: `m2`, phaseId: "group-a", homeTeam: "FR", awayTeam: "ES", result: undefined },
@@ -54,7 +57,10 @@ export default function TournamentCreator() {
       {
         id: "final",
         name: "Finał",
-        type: "final",
+        label: "Finał",
+        isKnockout: true,
+        allowDraw: false,
+        order: 2,
         matches: [{ id: `mf`, phaseId: "final", homeTeam: "PL", awayTeam: "FR", result: undefined }],
       },
     ];
