@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIBERO — Makiety</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== icon sprite ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol viewBox="0 0 24 24" id="ic-plus" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-edit" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-trash" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-upload" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-download" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-cal" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-clock" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-sliders" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h2M10 12h10M4 18h7M15 18h5"/><circle cx="16" cy="6" r="2"/><circle cx="8" cy="12" r="2"/><circle cx="13" cy="18" r="2"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-sun" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-moon" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-trophy" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4ZM7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-boot" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v9a3 3 0 0 0 3 3h2l2 2h7a2 2 0 0 0 2-2c0-2-2-3-4-3.5-1.5-.4-3-1-3.5-2.5l-1-3a3 3 0 0 0-3-2H4Z"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-info" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-cursor" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l7 16 2-7 7-2Z"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-grid" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-zap" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-search" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-grip" fill="currentColor" stroke="none"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></symbol>
+    <symbol viewBox="0 0 24 24" id="ic-check" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  </defs>
+</svg>
+
+<!-- ===== gallery header ===== -->
+<header class="gallery-head">
+  <div class="brand">
+    <div class="brand-mark"><svg width="20" height="20"><use href="#ic-trophy"/></svg></div>
+    <div>
+      <h1>LIBERO</h1>
+      <div class="sub">Typowania MŚ 2026 · makiety interfejsu</div>
+    </div>
+  </div>
+  <div class="theme-toggle" id="themeToggle">
+    <button data-set="light" class="active"><svg><use href="#ic-sun"/></svg> Jasny</button>
+    <button data-set="dark"><svg><use href="#ic-moon"/></svg> Ciemny</button>
+  </div>
+</header>
+
+<main class="canvas">
+
+  <!-- ===== ROW 1: screens 1, 2, 3 ===== -->
+  <div class="row">
+
+    <!-- ============ SCREEN 1 ============ -->
+    <div class="frame">
+      <div class="frame-label"><span class="idx">01</span> Gracze i typowania turnieju</div>
+      <div class="win" style="width:740px">
+        <div class="win-bar"><div class="lights"><i></i><i></i><i></i></div><div class="win-title">LIBERO</div></div>
+        <div class="win-body">
+          <div class="app-head">
+            <div class="ttl"><h2>Gracze i turniej</h2></div>
+            <div class="tag">MŚ<br>2026</div>
+          </div>
+
+          <!-- players -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="left"><h3>Lista graczy</h3></div>
+              <button class="btn btn-primary"><svg><use href="#ic-plus"/></svg> Dodaj gracza</button>
+            </div>
+            <div class="player-grid">
+              <div class="player-card">
+                <div class="av av-mk">MK</div>
+                <div class="meta"><div class="nm">Marek Kowalski</div><div class="st">22 pkt · 12 meczów</div></div>
+                <div class="acts"><button class="icon-btn"><svg><use href="#ic-edit"/></svg></button><button class="icon-btn danger"><svg><use href="#ic-trash"/></svg></button></div>
+              </div>
+              <div class="player-card">
+                <div class="av av-an">AN</div>
+                <div class="meta"><div class="nm">Anna Nowak</div><div class="st">19 pkt · 12 meczów</div></div>
+                <div class="acts"><button class="icon-btn"><svg><use href="#ic-edit"/></svg></button><button class="icon-btn danger"><svg><use href="#ic-trash"/></svg></button></div>
+              </div>
+              <div class="player-card">
+                <div class="av av-pw">PW</div>
+                <div class="meta"><div class="nm">Piotr Wiśniewski</div><div class="st">19 pkt · 12 meczów</div></div>
+                <div class="acts"><button class="icon-btn"><svg><use href="#ic-edit"/></svg></button><button class="icon-btn danger"><svg><use href="#ic-trash"/></svg></button></div>
+              </div>
+              <div class="player-card">
+                <div class="av av-jl">JL</div>
+                <div class="meta"><div class="nm">Justyna Lis</div><div class="st">14 pkt · 12 meczów</div></div>
+                <div class="acts"><button class="icon-btn"><svg><use href="#ic-edit"/></svg></button><button class="icon-btn danger"><svg><use href="#ic-trash"/></svg></button></div>
+              </div>
+              <div class="player-card">
+                <div class="av av-tr">TR</div>
+                <div class="meta"><div class="nm">Tomek Rybak</div><div class="st">8 pkt · 10 meczów</div></div>
+                <div class="acts"><button class="icon-btn"><svg><use href="#ic-edit"/></svg></button><button class="icon-btn danger"><svg><use href="#ic-trash"/></svg></button></div>
+              </div>
+              <div class="player-add">
+                <div class="ring"><svg><use href="#ic-plus"/></svg></div>
+                <span>Nowy gracz…</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- tournament picks -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="left"><h3>Typowania turnieju</h3></div>
+            </div>
+            <p class="panel-note">Mistrz turnieju i król strzelców — po jednym typie na gracza.</p>
+            <div class="picks-cols">
+              <div class="colh">Gracz</div><div class="colh">Mistrz turnieju</div><div class="colh">Król strzelców</div>
+            </div>
+            <div class="pick-row">
+              <div class="who"><div class="av sm av-mk">MK</div> Marek K.</div>
+              <div class="pick-field"><div class="lbl">Mistrz</div><div class="val"><span class="flag">🇧🇷</span> Brazylia</div></div>
+              <div class="pick-field"><div class="lbl">Król strzelców</div><div class="val">Vinicius Jr</div></div>
+            </div>
+            <div class="pick-row">
+              <div class="who"><div class="av sm av-an">AN</div> Anna N.</div>
+              <div class="pick-field"><div class="lbl">Mistrz</div><div class="val"><span class="flag">🇫🇷</span> Francja</div></div>
+              <div class="pick-field"><div class="lbl">Król strzelców</div><div class="val">Kylian Mbappé</div></div>
+            </div>
+            <div class="pick-row">
+              <div class="who"><div class="av sm av-pw">PW</div> Piotr W.</div>
+              <div class="pick-field"><div class="lbl">Mistrz</div><div class="val"><span class="flag">🇦🇷</span> Argentyna</div></div>
+              <div class="pick-field"><div class="lbl">Król strzelców</div><div class="val">Lionel Messi</div></div>
+            </div>
+            <div class="pick-row">
+              <div class="who"><div class="av sm av-jl">JL</div> Justyna L.</div>
+              <div class="pick-field empty"><div class="lbl">Mistrz</div><div class="val">Wpisz…</div></div>
+              <div class="pick-field empty"><div class="lbl">Król strzelców</div><div class="val">Wpisz…</div></div>
+            </div>
+          </div>
+
+          <!-- import/export -->
+          <div class="panel">
+            <div class="panel-head"><div class="left"><h3>Import / eksport</h3></div></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px">
+              <button class="btn btn-ghost btn-block"><svg><use href="#ic-upload"/></svg> Importuj JSON</button>
+              <button class="btn btn-ghost btn-block"><svg><use href="#ic-download"/></svg> Eksportuj JSON</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN 2 ============ -->
+    <div class="frame">
+      <div class="frame-label"><span class="idx">02</span> Typowanie meczu</div>
+      <div class="win" style="width:560px">
+        <div class="win-bar"><div class="lights"><i></i><i></i><i></i></div><div class="win-title">LIBERO</div></div>
+        <div class="win-body">
+          <div class="app-head">
+            <div class="ttl"><h2>Typowania · mecz</h2></div>
+            <div class="tag">MŚ<br>2026</div>
+          </div>
+
+          <div class="match-hero">
+            <div class="top">
+              <span class="badge badge-green">Faza grupowa · Grupa A</span>
+              <span class="match-when"><svg><use href="#ic-cal"/></svg> 15 cze, 18:00</span>
+            </div>
+            <div class="versus">
+              <div class="team"><div class="crest">🇵🇱</div><div class="nm">Polska</div></div>
+              <div class="vs">vs</div>
+              <div class="team"><div class="crest">🇩🇪</div><div class="nm">Niemcy</div></div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:18px">
+            <div class="panel-head"><div class="left"><h3>Typowania graczy</h3></div></div>
+            <div class="pick-list">
+              <div class="pl-row done">
+                <span class="sdot done"></span>
+                <div class="who"><div class="av sm av-mk">MK</div> Marek K.</div>
+                <div class="score"><span class="score-cell">2</span><span class="c">:</span><span class="score-cell">1</span></div>
+              </div>
+              <div class="pl-row edit">
+                <span class="sdot edit"></span>
+                <div class="who"><div class="av sm av-an">AN</div> Anna N.</div>
+                <div class="score"><span class="score-cell">1</span><span class="c">:</span><span class="score-cell">1</span></div>
+              </div>
+              <div class="pl-row done">
+                <span class="sdot done"></span>
+                <div class="who"><div class="av sm av-pw">PW</div> Piotr W.</div>
+                <div class="score"><span class="score-cell">1</span><span class="c">:</span><span class="score-cell">0</span></div>
+              </div>
+              <div class="pl-row">
+                <span class="sdot wait"></span>
+                <div class="who"><div class="av sm av-jl">JL</div> Justyna L.</div>
+                <div class="none">Brak typowania</div>
+              </div>
+              <div class="pl-row">
+                <span class="sdot wait"></span>
+                <div class="who"><div class="av sm av-tr">TR</div> Tomek R.</div>
+                <div class="none">Brak typowania</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ko-preview" style="margin-top:18px">
+            <span class="badge badge-violet">Ćwierćfinał</span>
+            <span style="font-size:13.5px;color:var(--text-muted);font-weight:600;margin-left:8px">podgląd — mecz pucharowy</span>
+            <div class="ttl">Gdy gracz wytypuje remis, pojawia się sekcja dogrywki:</div>
+            <div class="ko-q">
+              <div class="q">Kto wygra po dogrywce / rzutach karnych?</div>
+              <div class="ko-opts">
+                <button class="ko-opt sel"><span class="flag">🇵🇱</span> Polska</button>
+                <button class="ko-opt"><span class="flag">🇩🇪</span> Niemcy</button>
+              </div>
+            </div>
+            <div class="ko-foot">Opcjonalne · +1 pkt za trafienie zwycięzcy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN 3 ============ -->
+    <div class="frame">
+      <div class="frame-label"><span class="idx">03</span> Tabela wyników</div>
+      <div class="win" style="width:760px">
+        <div class="win-bar"><div class="lights"><i></i><i></i><i></i></div><div class="win-title">LIBERO</div></div>
+        <div class="win-body">
+          <div class="app-nav">
+            <span class="logo">MŚ 2026</span>
+            <span class="nav-pill">Faza grupowa · mecz 12/48</span>
+            <nav class="nav-tabs">
+              <a href="#">Mecze</a>
+              <a href="#">Typowania</a>
+              <a href="#" class="active">Tabela</a>
+              <a href="#">Gracze</a>
+            </nav>
+          </div>
+
+          <div class="panel-head">
+            <div class="left"><h3 style="font-size:20px">Tabela główna</h3></div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span class="badge badge-live"><span class="pulse"></span> Na żywo</span>
+              <span style="font-size:12.5px;color:var(--text-faint)">aktualizacja: teraz</span>
+            </div>
+          </div>
+
+          <div class="tbl-head">
+            <div class="r">Miejsce</div><div>Gracz</div>
+            <div class="r">Mecze</div><div class="r">Trafione</div><div class="r">Dokładne</div><div class="r">Punkty</div>
+          </div>
+          <div class="standings">
+            <div class="srow leader">
+              <div class="rank" style="text-align:center">1</div>
+              <div class="who"><div class="av sm av-mk">MK</div> Marek K.</div>
+              <div class="col">12</div><div class="col">8</div><div class="col">3</div><div class="pts">22</div>
+            </div>
+            <div class="srow">
+              <div class="rank" style="text-align:center">2</div>
+              <div class="who"><div class="av sm av-an">AN</div> Anna N.</div>
+              <div class="col">12</div><div class="col">7</div><div class="col">2</div><div class="pts">19</div>
+            </div>
+            <div class="srow">
+              <div class="rank" style="text-align:center">2</div>
+              <div class="who"><div class="av sm av-pw">PW</div> Piotr W. <span class="exa">ex aequo</span></div>
+              <div class="col">12</div><div class="col">7</div><div class="col">1</div><div class="pts">19</div>
+            </div>
+            <div class="srow">
+              <div class="rank" style="text-align:center">4</div>
+              <div class="who"><div class="av sm av-jl">JL</div> Justyna L.</div>
+              <div class="col">12</div><div class="col">5</div><div class="col">2</div><div class="pts">14</div>
+            </div>
+            <div class="srow">
+              <div class="rank" style="text-align:center">5</div>
+              <div class="who"><div class="av sm av-tr">TR</div> Tomek R.</div>
+              <div class="col">10</div><div class="col">3</div><div class="col">1</div><div class="pts">8</div>
+            </div>
+          </div>
+
+          <div class="panel-head" style="margin-top:26px">
+            <div class="left"><h3 style="font-size:20px">Kategorie specjalne</h3></div>
+            <span class="badge badge-amber">Nierozstrzygnięte</span>
+          </div>
+          <div class="special-grid">
+            <div class="spec-card">
+              <h4>🏆 MISTRZ TURNIEJU</h4>
+              <div class="spec-row"><div class="av sm av-mk">MK</div><span class="nm">Marek K.</span><span class="pick">Brazylia</span></div>
+              <div class="spec-row"><div class="av sm av-an">AN</div><span class="nm">Anna N.</span><span class="pick">Francja</span></div>
+              <div class="spec-row"><div class="av sm av-pw">PW</div><span class="nm">Piotr W.</span><span class="pick">Argentyna</span></div>
+            </div>
+            <div class="spec-card">
+              <h4>⚽ KRÓL STRZELCÓW</h4>
+              <div class="spec-row"><div class="av sm av-mk">MK</div><span class="nm">Marek K.</span><span class="pick">Vinicius Jr</span></div>
+              <div class="spec-row"><div class="av sm av-an">AN</div><span class="nm">Anna N.</span><span class="pick">Mbappé</span></div>
+              <div class="spec-row"><div class="av sm av-pw">PW</div><span class="nm">Piotr W.</span><span class="pick">Messi</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== ROW 2: bracket ===== -->
+  <div class="row">
+    <div class="frame">
+      <div class="frame-label"><span class="idx">04</span> Drabinka pucharowa (React Flow)</div>
+      <div class="win" style="width:1180px">
+        <div class="win-bar"><div class="lights"><i></i><i></i><i></i></div><div class="win-title">LIBERO</div></div>
+        <div class="win-body">
+          <div class="bracket-toolbar">
+            <span class="legend"><span class="ldot" style="background:var(--text-faint)"></span> Oczekuje na wynik</span>
+            <span class="legend"><span class="ldot" style="background:var(--blue)"></span> Edytowane</span>
+            <span class="legend"><span class="ldot" style="background:var(--green)"></span> Wynik wpisany</span>
+            <span class="legend hint">Kliknij węzeł meczu, aby edytować wynik</span>
+          </div>
+
+          <div class="bracket">
+            <svg class="edges" aria-hidden="true"></svg>
+            <div class="cols">
+              <!-- QF -->
+              <div class="bcol">
+                <div class="colhd">1/4 FINAŁU</div>
+                <div class="mnode done" data-node="qf1" style="margin-bottom:30px">
+                  <div class="team-line"><span class="flag">🇧🇷</span> Brazylia <span class="sc">2</span></div>
+                  <div class="team-line"><span class="flag">🇦🇷</span> Argentyna <span class="sc">1</span></div>
+                  <div class="foot"><span class="sdot" style="background:var(--green)"></span> Ćwierćfinał</div>
+                </div>
+                <div class="mnode done" data-node="qf2" style="margin-bottom:90px">
+                  <div class="team-line"><span class="flag">🇫🇷</span> Francja <span class="sc">3</span></div>
+                  <div class="team-line"><span class="flag">🇵🇹</span> Portugalia <span class="sc">1</span></div>
+                  <div class="foot"><span class="sdot" style="background:var(--green)"></span> Ćwierćfinał</div>
+                </div>
+                <div class="mnode done" data-node="qf3" style="margin-bottom:30px">
+                  <div class="team-line"><span class="flag">🇩🇪</span> Niemcy <span class="sc">0</span></div>
+                  <div class="team-line"><span class="flag">🇪🇸</span> Hiszpania <span class="sc">2</span></div>
+                  <div class="foot"><span class="sdot" style="background:var(--green)"></span> Ćwierćfinał</div>
+                </div>
+                <div class="mnode done" data-node="qf4">
+                  <div class="team-line"><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span> Anglia <span class="sc">1</span></div>
+                  <div class="team-line"><span class="flag">🇳🇱</span> Holandia <span class="sc">2</span></div>
+                  <div class="foot"><span class="sdot" style="background:var(--green)"></span> Ćwierćfinał</div>
+                </div>
+              </div>
+              <!-- SF -->
+              <div class="bcol">
+                <div class="colhd">PÓŁFINAŁ</div>
+                <div class="mnode" data-node="sf1" style="margin-top:120px;margin-bottom:170px">
+                  <div class="team-line tbd">TBD</div>
+                  <div class="team-line tbd">TBD</div>
+                  <div class="foot"><span class="sdot" style="background:var(--text-faint)"></span> Półfinał</div>
+                </div>
+                <div class="mnode" data-node="sf2">
+                  <div class="team-line tbd">TBD</div>
+                  <div class="team-line tbd">TBD</div>
+                  <div class="foot"><span class="sdot" style="background:var(--text-faint)"></span> Półfinał</div>
+                </div>
+              </div>
+              <!-- FINAL -->
+              <div class="bcol">
+                <div class="colhd">FINAŁ</div>
+                <div class="mnode" data-node="final" style="margin-top:288px">
+                  <div class="team-line tbd">TBD</div>
+                  <div class="team-line tbd">TBD</div>
+                  <div class="foot"><span class="sdot" style="background:var(--text-faint)"></span> Finał</div>
+                </div>
+              </div>
+              <!-- placeholder 4th col to balance grid -->
+              <div class="bcol">
+                <div class="colhd" style="opacity:.5">MISTRZ</div>
+                <div data-node="champ" style="margin-top:288px;width:230px;border:1.5px dashed var(--border-strong);border-radius:12px;padding:18px 15px;display:flex;align-items:center;gap:10px;color:var(--text-faint);font-weight:600">
+                  <svg width="18" height="18" style="color:var(--amber)"><use href="#ic-trophy"/></svg> Zwycięzca turnieju
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ROW 3: tournament creator ===== -->
+  <div class="row">
+    <div class="frame">
+      <div class="frame-label"><span class="idx">05</span> Kreator turnieju (React Flow)</div>
+      <div class="win" style="width:1180px">
+        <div class="win-bar"><div class="lights"><i></i><i></i><i></i></div><div class="win-title">LIBERO</div></div>
+        <div class="win-body">
+          <div class="app-head">
+            <div class="ttl"><h2>Kreator turnieju</h2></div>
+            <button class="btn btn-primary"><svg><use href="#ic-check"/></svg> Utwórz turniej</button>
+          </div>
+
+          <!-- config: name + template -->
+          <div class="creator-config">
+            <div>
+              <label class="field-lbl">Nazwa turnieju</label>
+              <input class="input" value="WC 2026">
+            </div>
+            <div style="flex:1">
+              <label class="field-lbl">Szablon</label>
+              <div class="tmpl-chips">
+                <div class="tmpl-chip active"><span class="t">MŚ — 32 drużyny</span><span class="d">8 grup · 6 faz</span></div>
+                <div class="tmpl-chip"><span class="t">MŚ — 16 drużyn</span><span class="d">4 grupy · 4 fazy</span></div>
+                <div class="tmpl-chip"><span class="t">Liga</span><span class="d">tylko faza grupowa</span></div>
+                <div class="tmpl-chip"><span class="t">Własny turniej</span><span class="d">fazy ręcznie</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- phases -->
+          <div class="panel" style="padding:18px 20px">
+            <div class="panel-head" style="margin-bottom:14px">
+              <div class="left"><h3 style="font-size:15px">Fazy turnieju</h3><span style="font-size:12.5px;color:var(--text-faint)">— edytowalne przed zapisaniem</span></div>
+            </div>
+            <div class="phases-strip">
+              <div class="phase-pill"><span class="ord">0</span> Faza grupowa <span class="ko g">grupowa</span></div>
+              <div class="phase-pill"><span class="ord">1</span> 1/8 finału <span class="ko k">puchar</span></div>
+              <div class="phase-pill"><span class="ord">2</span> Ćwierćfinał <span class="ko k">puchar</span></div>
+              <div class="phase-pill"><span class="ord">3</span> Półfinał <span class="ko k">puchar</span></div>
+              <div class="phase-pill"><span class="ord">4</span> Mecz o 3. miejsce <span class="ko k">puchar</span></div>
+              <div class="phase-pill"><span class="ord">5</span> Finał <span class="ko k">puchar</span></div>
+              <div class="phase-add"><svg><use href="#ic-plus"/></svg> Dodaj fazę</div>
+            </div>
+          </div>
+
+          <!-- stage: countries + canvas -->
+          <div class="creator-stage" style="margin-top:18px">
+            <div class="country-panel">
+              <div class="cp-head"><h3>Kraje</h3><span class="badge badge-green">12 wolnych</span></div>
+              <div class="country-search"><svg><use href="#ic-search"/></svg> Szukaj kraju…</div>
+              <div class="country-list">
+                <div class="country-chip"><span class="flag">🇧🇷</span> Brazylia <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip"><span class="flag">🇫🇷</span> Francja <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip"><span class="flag">🇦🇷</span> Argentyna <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip"><span class="flag">🇪🇸</span> Hiszpania <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip"><span class="flag">🇵🇹</span> Portugalia <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip"><span class="flag">🇳🇱</span> Holandia <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip"><span class="flag">🇧🇪</span> Belgia <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip"><span class="flag">🇮🇹</span> Włochy <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip"><span class="flag">🇭🇷</span> Chorwacja <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip"><span class="flag">🇯🇵</span> Japonia <span class="grip"><svg><use href="#ic-grip"/></svg></span></div>
+                <div class="country-chip assigned"><span class="flag">🇵🇱</span> Polska <span class="check"><svg><use href="#ic-check"/></svg></span></div>
+                <div class="country-chip assigned"><span class="flag">🇩🇪</span> Niemcy <span class="check"><svg><use href="#ic-check"/></svg></span></div>
+              </div>
+            </div>
+
+            <div class="rf-canvas">
+              <span class="rf-hint">Przeciągnij kraj z panelu na grupę</span>
+              <div class="drag-ghost" style="top:96px;left:150px"><span class="flag">🇲🇽</span> Meksyk</div>
+              <div class="group-grid">
+                <div class="group-node">
+                  <div class="gh"><span class="gn">Grupa A</span><span class="cnt">2/4</span></div>
+                  <div class="slot"><span class="flag">🇵🇱</span> Polska</div>
+                  <div class="slot"><span class="flag">🇩🇪</span> Niemcy</div>
+                  <div class="slot drop">Upuść kraj tutaj</div>
+                  <div class="slot empty">Pusty slot</div>
+                </div>
+                <div class="group-node">
+                  <div class="gh"><span class="gn">Grupa B</span><span class="cnt">3/4</span></div>
+                  <div class="slot"><span class="flag">🇧🇷</span> Brazylia</div>
+                  <div class="slot"><span class="flag">🇷🇸</span> Serbia</div>
+                  <div class="slot"><span class="flag">🇨🇭</span> Szwajcaria</div>
+                  <div class="slot empty">Pusty slot</div>
+                </div>
+                <div class="group-node">
+                  <div class="gh"><span class="gn">Grupa C</span><span class="cnt">4/4</span></div>
+                  <div class="slot"><span class="flag">🇦🇷</span> Argentyna</div>
+                  <div class="slot"><span class="flag">🇲🇽</span> Meksyk</div>
+                  <div class="slot"><span class="flag">🇵🇱</span> Polska</div>
+                  <div class="slot"><span class="flag">🇸🇦</span> Arabia S.</div>
+                </div>
+                <div class="group-node">
+                  <div class="gh"><span class="gn">Grupa D</span><span class="cnt">2/4</span></div>
+                  <div class="slot"><span class="flag">🇫🇷</span> Francja</div>
+                  <div class="slot"><span class="flag">🇩🇰</span> Dania</div>
+                  <div class="slot empty">Pusty slot</div>
+                  <div class="slot empty">Pusty slot</div>
+                </div>
+                <div class="group-node">
+                  <div class="gh"><span class="gn">Grupa E</span><span class="cnt">3/4</span></div>
+                  <div class="slot"><span class="flag">🇪🇸</span> Hiszpania</div>
+                  <div class="slot"><span class="flag">🇯🇵</span> Japonia</div>
+                  <div class="slot"><span class="flag">🇨🇷</span> Kostaryka</div>
+                  <div class="slot empty">Pusty slot</div>
+                </div>
+                <div class="group-node">
+                  <div class="gh"><span class="gn">Grupa F</span><span class="cnt">2/4</span></div>
+                  <div class="slot"><span class="flag">🇧🇪</span> Belgia</div>
+                  <div class="slot"><span class="flag">🇭🇷</span> Chorwacja</div>
+                  <div class="slot empty">Pusty slot</div>
+                  <div class="slot empty">Pusty slot</div>
+                </div>
+                <div class="group-node">
+                  <div class="gh"><span class="gn">Grupa G</span><span class="cnt">1/4</span></div>
+                  <div class="slot"><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span> Anglia</div>
+                  <div class="slot empty">Pusty slot</div>
+                  <div class="slot empty">Pusty slot</div>
+                  <div class="slot empty">Pusty slot</div>
+                </div>
+                <div class="group-node">
+                  <div class="gh"><span class="gn">Grupa H</span><span class="cnt">2/4</span></div>
+                  <div class="slot"><span class="flag">🇵🇹</span> Portugalia</div>
+                  <div class="slot"><span class="flag">🇺🇾</span> Urugwaj</div>
+                  <div class="slot empty">Pusty slot</div>
+                  <div class="slot empty">Pusty slot</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+  const root = document.documentElement;
+  const saved = localStorage.getItem('libero-theme') || 'light';
+  root.setAttribute('data-theme', saved);
+  const tg = document.getElementById('themeToggle');
+  function sync(t){ tg.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.set === t)); }
+  sync(saved);
+  tg.addEventListener('click', e => {
+    const b = e.target.closest('button'); if(!b) return;
+    const t = b.dataset.set;
+    root.setAttribute('data-theme', t);
+    localStorage.setItem('libero-theme', t);
+    sync(t);
+  });
+
+  // ---- bracket connectors: drawn from real node positions ----
+  (function(){
+    const SVGNS = 'http://www.w3.org/2000/svg';
+    const conns = [['qf1','sf1'],['qf2','sf1'],['qf3','sf2'],['qf4','sf2'],['sf1','final'],['sf2','final'],['final','champ']];
+    function draw(){
+      const bracket = document.querySelector('.bracket');
+      if(!bracket) return;
+      const svg = bracket.querySelector('svg.edges');
+      const r0 = bracket.getBoundingClientRect();
+      svg.setAttribute('viewBox', '0 0 ' + r0.width + ' ' + r0.height);
+      while(svg.firstChild) svg.removeChild(svg.firstChild);
+      conns.forEach(function(c){
+        const a = bracket.querySelector('[data-node="' + c[0] + '"]');
+        const b = bracket.querySelector('[data-node="' + c[1] + '"]');
+        if(!a || !b) return;
+        const ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+        const x1 = ra.right - r0.left, y1 = ra.top - r0.top + ra.height / 2;
+        const x2 = rb.left  - r0.left, y2 = rb.top - r0.top + rb.height / 2;
+        const mx = (x1 + x2) / 2;
+        const p = document.createElementNS(SVGNS, 'path');
+        p.setAttribute('d', 'M' + x1 + ' ' + y1 + ' C ' + mx + ' ' + y1 + ', ' + mx + ' ' + y2 + ', ' + x2 + ' ' + y2);
+        p.setAttribute('fill', 'none');
+        p.setAttribute('stroke', 'var(--border-strong)');
+        p.setAttribute('stroke-width', '2');
+        svg.appendChild(p);
+      });
+    }
+    draw();
+    window.addEventListener('load', function(){ draw(); setTimeout(draw, 250); });
+    window.addEventListener('resize', draw);
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+  })();
+</script>
+
+</body>
+</html>
