@@ -1,70 +1,72 @@
-import { useTranslation } from "react-i18next";
-import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
-import { TournamentPick } from "../../types";
+// src/features/picks/TournamentPickForm.tsx
+import React, { useState, useEffect } from 'react';
+import { Team } from '../../types';
+import { getTournamentPick, saveTournamentPick } from '../../db/picks';
 
-interface TournamentPickFormProps {
-  playerId: string;
-  pick?: TournamentPick;
-  onSubmit: (pick: Omit<TournamentPick, 'playerId'>) => void;
+interface Props {
+  playerId: number;
+  teams: Team[];
 }
 
-export default function TournamentPickForm({ playerId, pick, onSubmit }: TournamentPickFormProps) {
-  const { t } = useTranslation();
-  const { submitTournamentPick } = useTournamentStore();
-  const tournament = useActiveTournament();
+export const TournamentPickForm: React.FC<Props> = ({ playerId, teams }) => {
+  const [championTeamId, setChampionTeamId] = useState<number | null>(null);
+  const [topScorer, setTopScorer] = useState('');
 
-  const teams = tournament ? tournament.teams.map(t => t.id).sort() : [];
+  useEffect(() => {
+    const load = async () => {
+      const data = await getTournamentPick(playerId);
+      if (data) {
+        setChampionTeamId(data.championTeamId);
+        setTopScorer(data.topScorerName);
+      } else {
+        setChampionTeamId(null);
+        setTopScorer('');
+      }
+    };
+    load();
+  }, [playerId]);
 
-  const currentPick: TournamentPick = pick || {
-    playerId,
-    champion: "",
-    topScorer: "",
-  };
-
-  const handleChange = (field: "champion" | "topScorer", value: string) => {
-    const newPick = { ...currentPick, [field]: value };
-    onSubmit({ champion: newPick.champion, topScorer: newPick.topScorer });
-    // also persist immediately
-    submitTournamentPick(playerId, { champion: newPick.champion, topScorer: newPick.topScorer });
+  const handleSave = async () => {
+    await saveTournamentPick(playerId, championTeamId, topScorer);
+    alert('Typy turniejowe zapisane!');
   };
 
   return (
-    <div className="bg-surface border border-border rounded-xl p-4 shadow-sm">
-      <div className="flex items-center justify-between mb-4 border-b border-border pb-3">
-        <h3 className="text-sm font-bold text-text-muted flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-blue"></span>
-          {t("picks.tournament")}
-        </h3>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-inset border border-border rounded-lg p-3 focus-within:ring-2 focus-within:ring-blue/20 focus-within:border-blue transition-all">
-          <label className="block text-[10px] font-bold text-text-faint uppercase tracking-wider mb-1">
-            {t("picks.champion")}
-          </label>
+    <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 space-y-4">
+      <h3 className="text-lg font-bold text-white uppercase tracking-wider">Typy turniejowe</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-400">Typowany mistrz</label>
           <select
-            value={currentPick.champion}
-            onChange={(e) => handleChange("champion", e.target.value)}
-            className="w-full bg-transparent text-sm font-bold focus:outline-none appearance-none"
+            value={championTeamId ?? ''}
+            onChange={(e) => setChampionTeamId(parseInt(e.target.value) || null)}
+            className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            <option value="">— Wybierz —</option>
-            {teams.map((team) => (
-              <option key={team} value={team}>{team}</option>
+            <option value="">Wybierz drużynę...</option>
+            {teams.map(t => (
+              <option key={t.id} value={t.id}>{t.name}</option>
             ))}
           </select>
         </div>
-        <div className="bg-inset border border-border rounded-lg p-3 focus-within:ring-2 focus-within:ring-blue/20 focus-within:border-blue transition-all">
-          <label className="block text-[10px] font-bold text-text-faint uppercase tracking-wider mb-1">
-            {t("picks.topScorer")}
-          </label>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-slate-400">Typowany król strzelców</label>
           <input
             type="text"
-            value={currentPick.topScorer}
-            onChange={(e) => handleChange("topScorer", e.target.value)}
-            className="w-full bg-transparent text-sm font-bold focus:outline-none"
-            placeholder="Wpisz nazwisko"
+            value={topScorer}
+            onChange={(e) => setTopScorer(e.target.value)}
+            placeholder="Imię i nazwisko zawodnika..."
+            className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
       </div>
+      <div className="flex justify-end pt-2">
+        <button
+          onClick={handleSave}
+          className="bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg px-6 py-2 font-medium transition-colors"
+        >
+          Zapisz typy turniejowe
+        </button>
+      </div>
     </div>
   );
-}
+};

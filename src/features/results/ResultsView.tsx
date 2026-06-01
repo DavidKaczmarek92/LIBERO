@@ -1,0 +1,59 @@
+// src/features/results/ResultsView.tsx
+import React, { useState, useEffect } from 'react';
+import { Match, Team, Phase } from '../../types';
+import { getMatches, getTeams, updateMatchResult } from '../../db/matches';
+import { MatchResultRow } from './MatchResultRow';
+
+export const ResultsView: React.FC = () => {
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
+
+  const loadData = async () => {
+    setMatches(await getMatches());
+    setTeams(await getTeams());
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const handleSaveResult = async (matchId: number, homeGoals: number | null, awayGoals: number | null, etWinner: number | null) => {
+    await updateMatchResult(matchId, homeGoals, awayGoals, etWinner);
+    loadData();
+  };
+
+  const phases: { label: string, phase: Phase, group?: string }[] = [];
+  const groups = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+  groups.forEach(g => phases.push({ label: `Grupa ${g}`, phase: 'group', group: g }));
+  phases.push({ label: 'Runda 32', phase: 'r32' });
+  phases.push({ label: 'Runda 16', phase: 'r16' });
+  phases.push({ label: 'Ćwierćfinały', phase: 'qf' });
+  phases.push({ label: 'Półfinały', phase: 'sf' });
+  phases.push({ label: 'Finał', phase: 'final' });
+
+  return (
+    <div className="space-y-8 pb-20">
+
+      {phases.map((p) => {
+        const phaseMatches = matches.filter(m => m.phase === p.phase && (!p.group || m.groupLabel === p.group));
+        if (phaseMatches.length === 0) return null;
+
+        return (
+          <div key={`${p.phase}-${p.group ?? ''}`} className="space-y-4">
+            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest pl-2">{p.label}</h3>
+            <div className="grid grid-cols-1 gap-2">
+              {phaseMatches.map(m => (
+                <MatchResultRow
+                  key={m.id}
+                  match={m}
+                  teams={teams}
+                  onSave={(h, a, et) => handleSaveResult(m.id, h, a, et)}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
