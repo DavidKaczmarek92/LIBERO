@@ -37,5 +37,15 @@
   "tournament.create": "Utwórz turniej",
   "tournament.groups": "Grupy fazy grupowej",
   "tournament.knockout": "Fazy pucharowe",
-  "tournament.selectTemplate": "Wybierz szablon"
+  "tournament.selectTemplate": "Wybierz szablon",
+  "nav.dashboard": "Panel główny",
+  "nav.picks": "Typowania",
+  "nav.matches": "Wyniki meczów",
+  "nav.bracket": "Drabinka",
+  "nav.standings": "Tabela punktowa",
+  "nav.settings": "Ustawienia",
+  "templates.t48": "Mistrzostwa Świata 2026 (48 drużyn)",
+  "templates.t32": "Mistrzostwa Świata (32 drużyny)",
+  "templates.t16": "Turniej 16 drużyn",
+  "templates.league": "Liga (każdy z każdym)"
 }

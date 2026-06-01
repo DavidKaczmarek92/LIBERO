@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TournamentTemplate } from "../../types";
+import { TemplateDefinition } from "../../data/templates";
+import { COUNTRIES } from "../../data/countries";
 
 interface TournamentFormProps {
-  template: TournamentTemplate | null;
+  template: TemplateDefinition | null;
   onCreate: (name: string, templateId: string) => void;
   onCancel: () => void;
 }
@@ -21,6 +22,10 @@ export default function TournamentForm({ template, onCreate, onCancel }: Tournam
     if (!template) return;
     onCreate(name.trim(), template.id);
   };
+
+  const requiredTeams = template 
+    ? (template.id === 'league' ? template.teamsPerGroup : template.groupCount * template.teamsPerGroup) 
+    : 0;
 
   return (
     <div className="bg-surface border border-border rounded-2xl p-6 shadow-sm mt-6 animate-in fade-in slide-in-from-top-4 duration-300">
@@ -44,6 +49,22 @@ export default function TournamentForm({ template, onCreate, onCancel }: Tournam
             </div>
           )}
         </div>
+
+        {template && (
+          <div>
+            <label className="block text-sm font-bold text-text-muted mb-2">Wybrane drużyny ({requiredTeams})</label>
+            <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto bg-inset border border-border rounded-xl p-3">
+              {COUNTRIES.slice(0, requiredTeams).map(c => (
+                <span key={c.id} className="bg-surface border border-border rounded px-2 py-1 text-xs font-bold flex items-center gap-1 shadow-sm">
+                  <span>{c.flag}</span>
+                  <span>{c.id}</span>
+                </span>
+              ))}
+            </div>
+            <p className="text-[10px] text-text-faint mt-2 italic">Dla tego szablonu automatycznie przypisano {requiredTeams} drużyn.</p>
+          </div>
+        )}
+
         {template && (
           <div className="flex items-center gap-2 bg-blue-soft/30 px-4 py-3 rounded-xl border border-blue-soft">
             <div className="text-xs font-bold text-blue uppercase tracking-wider">Szablon:</div>
