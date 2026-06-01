@@ -1,0 +1,70 @@
+# --- General ---
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+*.swp
+.idea/
+.vscode/
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+
+# --- Junie ---
+# The .junie folder contains shared guidelines and configuration.
+# It is recommended to keep it tracked in Git.
+# If you use local-only configurations, you can uncomment the line below:
+.junie/local/
+.junie/plans/
+
+# --- Dependencies ---
+node_modules/
+jspm_packages/
+
+# --- Deno ---
+# It is recommended to check deno.lock into source control for applications.
+# If you prefer to ignore it, uncomment the line below.
+# deno.lock
+.env
+.env.*
+!.env.example
+
+# --- Vite / React / Frontend ---
+.vite/
+dist/
+dist-ssr/
+*.local
+.eslintcache
+.stylelintcache
+.tsbuildinfo
+
+# --- Tauri ---
+src-tauri/target/
+src-tauri/binaries/
+src-tauri/gen/
+
+# --- Rust (for Tauri backend) ---
+# Usually covered by src-tauri/target/, but added for completeness
+target/
+# Cargo.lock is typically checked in for applications to ensure reproducible builds.
+# If this were a library, it might be ignored.
+# Cargo.lock
+
+# --- Build / CI / Coverage ---
+.features-gen/
+playwright-report/
+test-results/
+coverage/
+*.lcov
+.nyc_output/
+.cache/
+.parcel-cache/
+.next/
+out/
+build/
+.output.txt
+
+# --- Storybook ---
+storybook-static/
