@@ -15,19 +15,28 @@ export default function TournamentCreator() {
 
   if (tournament) {
     return (
-      <div className="panel">
-        <div className="panel-head">
-          <h3>{tournament.name}</h3>
-          <span className="badge badge-green">Utworzony</span>
+      <div className="bg-surface border border-border rounded-2xl p-6 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-disp text-lg font-bold">{tournament.name}</h3>
+          <span className="bg-green-soft text-green-fg text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+            Utworzony
+          </span>
         </div>
-        <div className="text-sm text-text-muted">Fazy: {tournament.phases.length} • Grupy gotowe do typowania.</div>
+        <div className="text-sm text-text-muted">
+          Fazy: {tournament.phases.length} • Grupy gotowe do typowania.
+        </div>
       </div>
     );
   }
 
   const handleSelectTemplate = (tpl: TournamentTemplate) => {
-    setSelectedTemplate(tpl);
-    setShowForm(true);
+    if (selectedTemplate?.id === tpl.id) {
+      setSelectedTemplate(null);
+      setShowForm(false);
+    } else {
+      setSelectedTemplate(tpl);
+      setShowForm(true);
+    }
   };
 
   const handleCreate = (name: string, templateId: string) => {
@@ -61,11 +70,13 @@ export default function TournamentCreator() {
   };
 
   return (
-    <div>
-      <div className="panel">
-        <div className="panel-head">
-          <h3>{t("tournament.title")}</h3>
+    <div className="space-y-6">
+      <div className="bg-surface border border-border rounded-2xl p-6 shadow-sm">
+        <div className="mb-6">
+          <h3 className="font-disp text-xl font-bold mb-1">{t("tournament.title")}</h3>
+          <p className="text-sm text-text-faint">Wybierz jeden z gotowych formatów lub stwórz własny.</p>
         </div>
+        
         <TemplateSelector
           selectedId={selectedTemplate?.id || ""}
           onSelect={handleSelectTemplate}
@@ -81,11 +92,15 @@ export default function TournamentCreator() {
       )}
 
       {selectedTemplate && !showForm && (
-        <div className="panel mt-4">
-          <div className="panel-head">
-            <h3>{t("tournament.groups")} + {t("tournament.knockout")}</h3>
+        <div className="bg-surface border border-border rounded-2xl p-6 shadow-sm">
+          <div className="mb-4">
+            <h3 className="font-disp text-lg font-bold">{t("tournament.groups")} + {t("tournament.knockout")}</h3>
+            <p className="text-xs text-text-faint mt-1 italic">
+              Podgląd struktury dla szablonu: <span className="font-semibold">{selectedTemplate.name}</span>
+            </p>
           </div>
-          <div style={{ height: 280 }} className="border border-border rounded-[var(--radius)] overflow-hidden bg-surface-2">
+          
+          <div className="h-[300px] border border-border rounded-xl overflow-hidden bg-surface-2 relative">
             <ReactFlow
               nodes={[
                 { id: "n1", data: { label: "Grupa A: PL vs DE" }, position: { x: 50, y: 40 } },
@@ -98,8 +113,10 @@ export default function TournamentCreator() {
               <Controls />
               <MiniMap />
             </ReactFlow>
+            <div className="absolute bottom-3 right-3 z-10 bg-white/80 backdrop-blur px-2 py-1 rounded text-[10px] font-bold text-text-faint border border-border shadow-sm">
+              React Flow canvas
+            </div>
           </div>
-          <div className="text-xs text-center mt-2 text-text-faint">React Flow canvas — edycja grup i faz (uproszczona)</div>
         </div>
       )}
     </div>

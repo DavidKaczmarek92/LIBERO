@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
@@ -78,36 +82,14 @@ body {
   transition: background-color .35s ease, color .35s ease;
 }
 
-.win {
-  background: var(--win-bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: var(--shadow-win);
-  overflow: hidden;
-}
-.win-bar {
-  display: flex; align-items: center; gap: 8px;
-  height: 38px; padding: 0 15px;
-  background: var(--chrome);
-  border-bottom: 1px solid var(--border);
-}
-.lights { display: flex; gap: 7px; }
-.lights i { width: 11px; height: 11px; border-radius: 50%; display: block; }
-.lights i:nth-child(1){ background:#FF5F57; }
-.lights i:nth-child(2){ background:#FEBC2E; }
-.lights i:nth-child(3){ background:#28C840; }
-.win-title {
-  flex: 1; text-align: center; font-size: 12px; font-weight: 600;
-  color: var(--text-faint); letter-spacing: .02em;
-}
-.win-body { padding: 26px; }
+/* .win and related mockup styles removed in favor of Tailwind CSS */
 
 .app-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
 .app-head .ttl { display: flex; align-items: center; gap: 12px; }
 .app-head h2 { font-family: var(--font-disp); font-size: 23px; font-weight: 700; margin: 0; letter-spacing: -.02em; }
 .app-head .tag { font-family: var(--font-disp); font-size: 13px; font-weight: 600; color: var(--text-faint); text-align: right; line-height: 1.2; }
 
-.panel { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-card); }
 .panel + .panel { margin-top: 18px; }
 .panel-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
 .panel-head .left { display: flex; align-items: center; gap: 11px; }

@@ -24,53 +24,61 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-canvas text-text">
-      <div className="win" style={{ maxWidth: "1200px", margin: "40px auto" }}>
-        <div className="win-bar">
-          <div className="lights"><i></i><i></i><i></i></div>
-          <div className="win-title">LIBERO</div>
-        </div>
-        <div className="win-body p-6">
-          <div className="app-head mb-6">
-            <div className="ttl"><h2>{t("app.title")}</h2></div>
-            <div className="tag">{t("app.tag")}</div>
+    <div className="min-h-screen bg-canvas text-text p-4 md:p-8">
+      <div className="max-w-[1200px] mx-auto">
+        <header className="flex flex-col sm:flex-row sm:items-start justify-between mb-8 gap-4">
+          <div className="flex items-center gap-3">
+            <h1 className="font-disp text-3xl font-extrabold tracking-tight text-text">{t("app.title")}</h1>
           </div>
-
-          <div className="flex gap-2 mb-4 border-b border-border pb-2">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                className={`tab ${activeTab === tab.id ? "active" : ""}`}
-                onClick={() => setActiveTab(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
+          <div className="font-disp text-sm font-semibold text-text-faint sm:text-right uppercase tracking-wider">
+            {t("app.tag")}
           </div>
+        </header>
 
+        <nav className="flex gap-1 mb-6 border-b border-border overflow-x-auto no-scrollbar">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              className={`px-4 py-3 text-sm font-bold transition-all border-b-2 whitespace-nowrap ${
+                activeTab === tab.id
+                  ? "text-blue border-blue bg-blue/5"
+                  : "text-text-muted border-transparent hover:text-text hover:bg-surface-2"
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+
+        <main>
           {activeTab === "playersPicks" && (
-            <div className="space-y-6">
+            <div className="flex flex-col gap-8">
               <TournamentCreator />
               <PlayerList />
               {players.length > 0 && (
-                <div>
-                  <div className="panel-head mb-3"><h3>{t("picks.title")}</h3></div>
-                  {players.map((player) => (
-                    <TournamentPickForm
-                      key={player.id}
-                      playerId={player.id}
-                      pick={tournamentPicks[player.id]}
-                      onSubmit={() => {}}
-                    />
-                  ))}
-                </div>
+                <section className="space-y-4">
+                  <div className="flex items-center gap-2 px-2">
+                    <h2 className="font-disp text-xl font-bold">{t("picks.title")}</h2>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4">
+                    {players.map((player) => (
+                      <TournamentPickForm
+                        key={player.id}
+                        playerId={player.id}
+                        pick={tournamentPicks[player.id]}
+                        onSubmit={() => {}}
+                      />
+                    ))}
+                  </div>
+                </section>
               )}
             </div>
           )}
           {activeTab === "matches" && <MatchList />}
           {activeTab === "bracket" && <BracketView />}
           {activeTab === "standings" && <StandingsTable />}
-        </div>
+        </main>
       </div>
     </div>
   );

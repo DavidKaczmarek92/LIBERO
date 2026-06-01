@@ -22,11 +22,13 @@ export default function PlayerList() {
   };
 
   const handleSave = (name: string) => {
+    let result;
     if (editingPlayer) {
-      return updatePlayer(editingPlayer.id, name);
+      result = updatePlayer(editingPlayer.id, name);
     } else {
-      return addPlayer(name);
+      result = addPlayer(name);
     }
+    return result;
   };
 
   const handleDelete = (id: string) => {
@@ -41,36 +43,54 @@ export default function PlayerList() {
   };
 
   return (
-    <div className="panel">
-      <div className="panel-head">
-        <div className="left">
-          <h3>{t("players.title")}</h3>
-          <span className="badge badge-blue">{players.length}</span>
+    <div className="bg-surface border border-border rounded-2xl p-6 shadow-sm">
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <h3 className="font-disp text-xl font-bold">{t("players.title")}</h3>
+          <span className="bg-blue-soft text-blue text-xs font-bold px-2.5 py-1 rounded-lg">
+            {players.length}
+          </span>
         </div>
-        <button onClick={handleAdd} className="btn btn-primary">
-          <Plus size={16} /> {t("players.add")}
+        <button
+          onClick={handleAdd}
+          className="flex items-center gap-2 bg-green text-white px-4 py-2 rounded-xl font-bold text-sm shadow-md shadow-green/20 hover:bg-green/90 transition-all active:scale-95"
+        >
+          <Plus size={18} /> {t("players.add")}
         </button>
       </div>
 
       {players.length === 0 ? (
-        <div className="text-center py-10 text-text-muted">
-          {t("players.empty")}
+        <div className="text-center py-12 border-2 border-dashed border-border rounded-xl">
+          <p className="text-text-faint font-medium">{t("players.empty")}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {players.map((player) => (
-            <div key={player.id} className="player-card">
-              <div className="av av-mk">{player.name.slice(0, 2).toUpperCase()}</div>
-              <div className="meta">
-                <div className="nm">{player.name}</div>
-                <div className="st">0 pkt • 0 typów</div>
+            <div
+              key={player.id}
+              className="group flex items-center gap-4 bg-surface-2 border border-border rounded-xl p-4 hover:border-blue/30 transition-all"
+            >
+              <div className="w-10 h-10 rounded-full bg-violet-soft text-violet-fg flex items-center justify-center font-disp font-bold text-sm shadow-sm">
+                {player.name.slice(0, 2).toUpperCase()}
               </div>
-              <div className="acts">
-                <button onClick={() => handleEdit(player)} className="icon-btn" title={t("players.edit")}>
-                  <Edit2 size={15} />
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-text truncate">{player.name}</div>
+                <div className="text-xs text-text-muted mt-0.5">0 pkt • 0 typów</div>
+              </div>
+              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={() => handleEdit(player)}
+                  className="p-2 text-text-muted hover:text-blue hover:bg-blue-soft rounded-lg transition-colors"
+                  title={t("players.edit")}
+                >
+                  <Edit2 size={16} />
                 </button>
-                <button onClick={() => handleDelete(player.id)} className="icon-btn danger" title={t("players.delete")}>
-                  <Trash2 size={15} />
+                <button
+                  onClick={() => handleDelete(player.id)}
+                  className="p-2 text-text-muted hover:text-red-fg hover:bg-red-50 rounded-lg transition-colors"
+                  title={t("players.delete")}
+                >
+                  <Trash2 size={16} />
                 </button>
               </div>
             </div>
