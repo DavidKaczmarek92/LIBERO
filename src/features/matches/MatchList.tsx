@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
-import { useTournamentStore } from "../../store/tournamentStore";
+import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
 import MatchResultForm from "./MatchResultForm";
 
 export default function MatchList() {
   const { t } = useTranslation();
-  const { tournament } = useTournamentStore();
+  const tournament = useActiveTournament();
 
   if (!tournament) {
     return (

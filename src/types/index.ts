@@ -69,10 +69,12 @@ export interface Tournament {
   id: string;
   name: string;
   templateId: string;
-  countries: string[]; // list of country ids used
-  groups: Record<string, string[]>; // e.g. { 'A': ['country1', 'country2', ...] }
+  teams: Country[];
+  groups: Record<string, string[]>;
   phases: TournamentPhase[];
-  // additional v1 fields
+  players: Player[];
+  matchPicks: Record<string, MatchPick[]>;
+  tournamentPicks: Record<string, TournamentPick>;
   createdAt: string;
 }
 
@@ -86,9 +88,6 @@ export const BUILT_IN_TEMPLATES: TournamentTemplate[] = [
 
 // Store state shape (for Zustand)
 export interface AppState {
-  tournament: Tournament | null;
-  players: Player[];
-  matchPicks: Record<string, MatchPick[]>; // playerId -> picks
-  tournamentPicks: Record<string, TournamentPick>; // playerId -> pick
-  // etc.
+  tournaments: Tournament[];
+  activeTournamentId: string | null;
 }

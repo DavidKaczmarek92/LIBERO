@@ -2,29 +2,35 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactFlow, { Background, Controls, MiniMap } from "reactflow";
 import "reactflow/dist/style.css";
-import { useTournamentStore } from "../../store/tournamentStore";
-import { TemplateDefinition, TOURNAMENT_TEMPLATES, generatePhasesFromTemplate } from "../../data/templates";
+import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
+import { TemplateDefinition, generatePhasesFromTemplate } from "../../data/templates";
 import { COUNTRIES } from "../../data/countries";
 import TemplateSelector from "./TemplateSelector";
 import TournamentForm from "./TournamentForm";
 
-export default function TournamentCreator() {
+interface TournamentCreatorProps {
+  forceCreate?: boolean;
+}
+
+export default function TournamentCreator({ forceCreate }: TournamentCreatorProps) {
   const { t } = useTranslation();
-  const { tournament, createTournament } = useTournamentStore();
+  const activeTournament = useActiveTournament();
+  const { createTournament } = useTournamentStore();
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateDefinition | null>(null);
   const [showForm, setShowForm] = useState(false);
 
-  if (tournament) {
+  // If there is an active tournament, we show its summary, unless we are forcing creation mode
+  if (activeTournament && !forceCreate) {
     return (
       <div className="bg-surface border border-border rounded-2xl p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-disp text-lg font-bold">{tournament.name}</h3>
+          <h3 className="font-disp text-lg font-bold">{activeTournament.name}</h3>
           <span className="bg-green-soft text-green-fg text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
             Aktywny
           </span>
         </div>
         <div className="text-sm text-text-muted">
-          Format: <span className="font-bold">{tournament.templateId}</span> • Fazy: {tournament.phases.length} • Drużyny: {tournament.countries.length}
+          Format: <span className="font-bold">{activeTournament.templateId}</span> • Fazy: {activeTournament.phases.length} • Drużyny: {activeTournament.teams.length}
         </div>
       </div>
     );
@@ -48,24 +54,25 @@ export default function TournamentCreator() {
       ? selectedTemplate.teamsPerGroup 
       : selectedTemplate.groupCount * selectedTemplate.teamsPerGroup;
     
-    const selectedTeams = COUNTRIES.slice(0, requiredTeams).map(c => c.id);
+    const selectedTeamIds = COUNTRIES.slice(0, requiredTeams).map(c => c.id);
+    const selectedTeams = COUNTRIES.slice(0, requiredTeams);
 
-    const phases = generatePhasesFromTemplate(selectedTemplate, selectedTeams);
+    const phases = generatePhasesFromTemplate(selectedTemplate, selectedTeamIds);
 
     const groups: Record<string, string[]> = {};
     if (selectedTemplate.id !== "league") {
       for (let i = 0; i < selectedTemplate.groupCount; i++) {
         const groupLabel = String.fromCharCode(65 + i);
-        groups[groupLabel] = selectedTeams.slice(i * selectedTemplate.teamsPerGroup, (i + 1) * selectedTemplate.teamsPerGroup);
+        groups[groupLabel] = selectedTeamIds.slice(i * selectedTemplate.teamsPerGroup, (i + 1) * selectedTemplate.teamsPerGroup);
       }
     } else {
-      groups["L"] = selectedTeams;
+      groups["L"] = selectedTeamIds;
     }
 
     createTournament({
       name,
       templateId,
-      countries: selectedTeams,
+      teams: selectedTeams,
       groups,
       phases,
     });

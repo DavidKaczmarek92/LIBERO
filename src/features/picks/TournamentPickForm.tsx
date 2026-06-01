@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useTournamentStore } from "../../store/tournamentStore";
+import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
 import { TournamentPick } from "../../types";
 
 interface TournamentPickFormProps {
@@ -10,17 +10,10 @@ interface TournamentPickFormProps {
 
 export default function TournamentPickForm({ playerId, pick, onSubmit }: TournamentPickFormProps) {
   const { t } = useTranslation();
-  const { tournament, submitTournamentPick } = useTournamentStore();
+  const { submitTournamentPick } = useTournamentStore();
+  const tournament = useActiveTournament();
 
-  const teams = tournament
-    ? Array.from(
-        new Set(
-          tournament.phases.flatMap((p) =>
-            p.matches.flatMap((m) => [m.homeTeam, m.awayTeam])
-          )
-        )
-      ).sort()
-    : [];
+  const teams = tournament ? tournament.teams.map(t => t.id).sort() : [];
 
   const currentPick: TournamentPick = pick || {
     playerId,

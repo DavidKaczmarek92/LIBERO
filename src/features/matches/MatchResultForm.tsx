@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Match, MatchResult } from "../../types";
-import { useTournamentStore } from "../../store/tournamentStore";
+import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
 import { shouldClearDownstream } from "../../utils/winnerPropagation";
 
 interface MatchResultFormProps {
@@ -11,7 +11,8 @@ interface MatchResultFormProps {
 
 export default function MatchResultForm({ match, onClose }: MatchResultFormProps) {
   const { t } = useTranslation();
-  const { updateMatchResult, tournament } = useTournamentStore();
+  const { updateMatchResult } = useTournamentStore();
+  const tournament = useActiveTournament();
   const [result, setResult] = useState<MatchResult>(
     match.result || { homeGoals: 0, awayGoals: 0 }
   );
@@ -24,7 +25,7 @@ export default function MatchResultForm({ match, onClose }: MatchResultFormProps
         return;
       }
     }
-    updateMatchResult(match.id, result, match.phaseId.includes("group") ? "group" : "knockout");
+    updateMatchResult(match.id, result);
     onClose?.();
   };
 

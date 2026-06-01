@@ -1,6 +1,6 @@
 {
-  "app.title": "LIBERO — Typowania MŚ 2026",
-  "app.tag": "MŚ 2026",
+  "app.title": "LIBERO — Manager Turniejów",
+  "app.tag": "Turniej",
   "tabs.playersPicks": "Gracze i typowania",
   "tabs.matches": "Mecze",
   "tabs.bracket": "Drabinka",
@@ -44,8 +44,8 @@
   "nav.bracket": "Drabinka",
   "nav.standings": "Tabela punktowa",
   "nav.settings": "Ustawienia",
-  "templates.t48": "Mistrzostwa Świata 2026 (48 drużyn)",
-  "templates.t32": "Mistrzostwa Świata (32 drużyny)",
-  "templates.t16": "Turniej 16 drużyn",
-  "templates.league": "Liga (każdy z każdym)"
+  "templates.t48": "Format 48 drużyn (12 grup)",
+  "templates.t32": "Format 32 drużyn (8 grup)",
+  "templates.t16": "Format 16 drużyn (4 grupy)",
+  "templates.league": "System ligowy (każdy z każdym)"
 }

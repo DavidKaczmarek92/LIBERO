@@ -2,19 +2,20 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./App.css";
 import TournamentCreator from "./features/tournament/TournamentCreator";
+import TeamManager from "./features/tournament/TeamManager";
 import PlayerList from "./features/players/PlayerList";
 import PlayerPicksSection from "./features/picks/PlayerPicksSection";
 import MatchList from "./features/matches/MatchList";
 import StandingsTable from "./features/standings/StandingsTable";
 import BracketView from "./features/bracket/BracketView";
-import { useTournamentStore } from "./store/tournamentStore";
+// import { useTournamentStore } from "./store/tournamentStore";
 import AppShell from "./components/layout/AppShell";
 import { NavItemId } from "./components/layout/Sidebar";
 
 function App() {
   const { t } = useTranslation();
   const [activeNavId, setActiveNavId] = useState<NavItemId>("dashboard");
-  const { players, tournamentPicks } = useTournamentStore();
+  // tournament store state
 
   return (
     <AppShell activeNavId={activeNavId} onNavigate={setActiveNavId}>
@@ -26,7 +27,20 @@ function App() {
             </h1>
           </header>
           <TournamentCreator />
+          <TeamManager />
           <PlayerList />
+        </div>
+      )}
+
+      {activeNavId === "create-tournament" && (
+        <div className="flex flex-col gap-8">
+          <header className="mb-2">
+            <h1 className="font-disp text-3xl font-extrabold tracking-tight text-text">
+              {t("tournament.create") || "Stwórz turniej"}
+            </h1>
+          </header>
+          {/* We use TournamentCreator but forcing it to show form if needed */}
+          <TournamentCreator forceCreate />
         </div>
       )}
 

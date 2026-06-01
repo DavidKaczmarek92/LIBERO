@@ -1,13 +1,18 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp, User, Trophy, FileText } from "lucide-react";
-import { useTournamentStore } from "../../store/tournamentStore";
+import { useTournamentStore, useActiveTournament } from "../../store/tournamentStore";
 import MatchPickRow from "./MatchPickRow";
 import TournamentPickForm from "./TournamentPickForm";
 
 export default function PlayerPicksSection() {
   const { t } = useTranslation();
-  const { players, tournament, matchPicks, tournamentPicks } = useTournamentStore();
+  const tournament = useActiveTournament();
+  
+  const players = tournament?.players || [];
+  const matchPicks = tournament?.matchPicks || {};
+  const tournamentPicks = tournament?.tournamentPicks || {};
+
   const [expandedPlayerId, setExpandedPlayerId] = useState<string | null>(players[0]?.id || null);
 
   if (!tournament) {
