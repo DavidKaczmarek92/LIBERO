@@ -99,7 +99,7 @@ The application has a robust, environment-aware storage system and updated data 
 - Add new i18n keys to `src/i18n/locales/pl.json` for navigation and templates.
 - Commit the changes for this step.
 
-### * Step 2: Implement Sidebar Layout and AppShell Navigation
+### ✓ Step 2: Implement Sidebar Layout and AppShell Navigation
 The application uses a modern sidebar layout for navigation on desktop and a responsive layout for smaller screens.
 
 - Create `src/components/layout/Sidebar.tsx` with navigation items and active state management.
@@ -108,7 +108,7 @@ The application uses a modern sidebar layout for navigation on desktop and a res
 - Update `App.tsx` state to handle the new navigation IDs from the RFC.
 - Commit the changes for this step.
 
-###   Step 3: Implement Match Picks with Player Accordions
+### * Step 3: Implement Match Picks with Player Accordions
 Users can view and enter match picks for each player through an organized accordion-based interface.
 
 - Create `src/features/picks/MatchPickRow.tsx` for compact, inline match pick entry.

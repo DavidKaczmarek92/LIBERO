@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import "./App.css";
 import TournamentCreator from "./features/tournament/TournamentCreator";
 import PlayerList from "./features/players/PlayerList";
-import TournamentPickForm from "./features/picks/TournamentPickForm";
+import PlayerPicksSection from "./features/picks/PlayerPicksSection";
 import MatchList from "./features/matches/MatchList";
 import StandingsTable from "./features/standings/StandingsTable";
 import BracketView from "./features/bracket/BracketView";
@@ -37,22 +37,7 @@ function App() {
               {t("nav.picks")}
             </h1>
           </header>
-          {players.length === 0 ? (
-             <div className="bg-surface border border-border rounded-2xl p-8 shadow-sm text-center">
-               <p className="text-text-muted font-medium">{t("players.empty")}</p>
-             </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {players.map((player) => (
-                <TournamentPickForm
-                  key={player.id}
-                  playerId={player.id}
-                  pick={tournamentPicks[player.id]}
-                  onSubmit={() => {}}
-                />
-              ))}
-            </div>
-          )}
+          <PlayerPicksSection />
         </div>
       )}
 
