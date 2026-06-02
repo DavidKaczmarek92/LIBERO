@@ -9,9 +9,10 @@ interface Props {
   pick: Pick | undefined;
   teams: Team[];
   onSave: (homeGoals: number, awayGoals: number, extraTimeWinnerId: number | null) => void;
+  onClear: () => void;
 }
 
-export const MatchPickRow: React.FC<Props> = ({ match, pick, teams, onSave }) => {
+export const MatchPickRow: React.FC<Props> = ({ match, pick, teams, onSave, onClear }) => {
   const { isLight } = useThemeContext();
   const homeTeam = teams.find(t => t.id === match.homeTeamId);
   const awayTeam = teams.find(t => t.id === match.awayTeamId);
@@ -28,6 +29,8 @@ export const MatchPickRow: React.FC<Props> = ({ match, pick, teams, onSave }) =>
 
   const [saving, setSaving] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
+  const [clearing, setClearing] = React.useState(false);
+  const [cleared, setCleared] = React.useState(false);
 
   const isKnockout = match.phase !== 'group';
   const isDraw = homeGoals !== '' && awayGoals !== '' && homeGoals === awayGoals;
@@ -46,8 +49,29 @@ export const MatchPickRow: React.FC<Props> = ({ match, pick, teams, onSave }) =>
     setTimeout(() => setSaved(false), 1500);
   };
 
+  const hasPick = pick !== undefined;
+
+  const handleClear = async () => {
+    setClearing(true);
+    await onClear();
+    setClearing(false);
+    setCleared(true);
+    setTimeout(() => setCleared(false), 1500);
+  };
+
   return (
-    <div className={`border rounded-xl p-4 flex flex-wrap items-center gap-3 shadow-sm ${isLight ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
+    <div className={`relative border rounded-xl p-4 flex flex-wrap items-center gap-3 shadow-sm ${isLight ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
+      {/* Points - absolute positioned so it doesn't affect flex centering */}
+      <span className={`absolute left-4 top-1/2 -translate-y-1/2 px-2.5 py-1 rounded-full text-xs font-bold ${
+        pick && match.homeGoals !== null
+          ? pick.points === 3 ? 'bg-yellow-400/20 text-yellow-300'
+          : pick.points >= 1 ? 'bg-green-400/20 text-green-300'
+          : 'bg-gray-600 text-gray-400'
+          : 'invisible'
+      }`}>
+        {pick && match.homeGoals !== null ? `${pick.points} pkt` : '0 pkt'}
+      </span>
+
       {/* Home Team Section */}
       <div className={`flex-1 min-w-[150px] flex items-center justify-end gap-2 font-semibold ${isLight ? 'text-gray-900' : 'text-white'}`}>
         <span className="text-sm">{homeTeam?.name ?? 'TBD'}</span>
@@ -96,28 +120,28 @@ export const MatchPickRow: React.FC<Props> = ({ match, pick, teams, onSave }) =>
             </div>
           )}
 
-          <div className="flex items-center gap-2">
-            <span className={`w-16 text-center px-2.5 py-1 rounded-full text-xs font-bold ${
-              pick && match.homeGoals !== null
-                ? pick.points === 3 ? 'bg-yellow-400/20 text-yellow-300'
-                : pick.points >= 1 ? 'bg-green-400/20 text-green-300'
-                : 'bg-gray-600 text-gray-400'
-                : 'invisible'
-            }`}>
-              {pick && match.homeGoals !== null ? `${pick.points} pkt` : '0 pkt'}
-            </span>
-            <button
-              onClick={handleSave}
-              disabled={!hasChanged || saving || homeGoals === '' || awayGoals === ''}
-              className={`text-white text-xs rounded-lg px-4 py-1.5 font-semibold transition-colors min-w-[80px] text-center ${
-                saved ? 'bg-green-600'
-                : !hasChanged || saving || homeGoals === '' || awayGoals === '' ? 'bg-gray-600 cursor-not-allowed opacity-50'
-                : 'bg-indigo-600 hover:bg-indigo-500'
-              }`}
-            >
-              {saving ? '⏳ Zapis...' : saved ? '✅ Zapisano' : 'Zapisz'}
-            </button>
-          </div>
+          <button
+            onClick={handleSave}
+            disabled={!hasChanged || saving || homeGoals === '' || awayGoals === ''}
+            className={`text-white text-xs rounded-lg px-4 py-1.5 font-semibold transition-colors min-w-[80px] text-center ${
+              saved ? 'bg-green-600'
+              : !hasChanged || saving || homeGoals === '' || awayGoals === '' ? 'bg-gray-600 cursor-not-allowed opacity-50'
+              : 'bg-indigo-600 hover:bg-indigo-500'
+            }`}
+          >
+            {saving ? '⏳ Zapis...' : saved ? '✅ Zapisano' : 'Zapisz'}
+          </button>
+          <button
+            onClick={handleClear}
+            disabled={!hasPick || clearing || saving}
+            className={`text-xs rounded-lg px-4 py-1.5 font-semibold transition-colors min-w-[90px] text-center ${
+              cleared ? 'bg-green-600 text-white'
+              : !hasPick || clearing || saving ? 'bg-gray-600 text-white opacity-50 cursor-not-allowed'
+              : 'bg-red-600 hover:bg-red-500 text-white'
+            }`}
+          >
+            {clearing ? '⏳ Czyszczę...' : cleared ? '✅ Wyczyszczono' : 'Wyczyść'}
+          </button>
         </div>
       </div>
     </div>

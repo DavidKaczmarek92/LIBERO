@@ -50,6 +50,11 @@ export async function savePick(
   );
 }
 
+export async function deletePick(playerId: number, matchId: number): Promise<void> {
+  const db = await getDb();
+  await db.execute('DELETE FROM picks WHERE player_id = ? AND match_id = ?', [playerId, matchId]);
+}
+
 export async function recalculatePicksForMatch(matchId: number): Promise<void> {
   const db = await getDb();
   const matchRow = await db.select<any[]>('SELECT * FROM matches WHERE id = ?', [matchId]);

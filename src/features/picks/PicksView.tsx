@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Player, Match, Pick, Team, Phase } from '../../types';
 import { getPlayers } from '../../db/players';
 import { getMatches, getTeams } from '../../db/matches';
-import { getPicks, savePick } from '../../db/picks';
+import { getPicks, savePick, deletePick } from '../../db/picks';
 import { MatchPickRow } from './MatchPickRow';
 import { TournamentPickForm } from './TournamentPickForm';
 import { useThemeContext } from '../../hooks/ThemeContext';
@@ -49,6 +49,12 @@ export const PicksView: React.FC = () => {
     if (!selectedPlayerId) return;
     await savePick(selectedPlayerId, matchId, homeGoals, awayGoals, etWinner);
     // Reload picks to show updated points if result was already entered
+    setPicks(await getPicks(selectedPlayerId));
+  };
+
+  const handleClearPick = async (matchId: number) => {
+    if (!selectedPlayerId) return;
+    await deletePick(selectedPlayerId, matchId);
     setPicks(await getPicks(selectedPlayerId));
   };
 
@@ -119,6 +125,7 @@ export const PicksView: React.FC = () => {
                         pick={picks.find(pk => pk.matchId === m.id)}
                         teams={teams}
                         onSave={(h, a, et) => handleSavePick(m.id, h, a, et)}
+                        onClear={() => handleClearPick(m.id)}
                       />
                     ))}
                   </div>

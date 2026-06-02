@@ -21,6 +21,8 @@ export const MatchResultRow: React.FC<Props> = ({ match, teams, onSave }) => {
   const [etWinner, setEtWinner] = React.useState<number | null>(match.extraTimeWinnerId ?? null);
   const [saving, setSaving] = React.useState(false);
   const [saved, setSaved] = React.useState(false);
+  const [clearing, setClearing] = React.useState(false);
+  const [cleared, setCleared] = React.useState(false);
 
   const isKnockout = match.phase !== 'group';
   const isDraw = homeGoals !== '' && awayGoals !== '' && homeGoals === awayGoals;
@@ -40,6 +42,19 @@ export const MatchResultRow: React.FC<Props> = ({ match, teams, onSave }) => {
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 1500);
+  };
+
+  const hasResult = match.homeGoals !== null || match.awayGoals !== null;
+
+  const handleClear = async () => {
+    setClearing(true);
+    await onSave(null, null, null);
+    setHomeGoals('');
+    setAwayGoals('');
+    setEtWinner(null);
+    setClearing(false);
+    setCleared(true);
+    setTimeout(() => setCleared(false), 1500);
   };
 
   return (
@@ -99,6 +114,17 @@ export const MatchResultRow: React.FC<Props> = ({ match, teams, onSave }) => {
             }`}
           >
             {saving ? '⏳ Zapis...' : saved ? '✅ Zapisano' : 'Zapisz wynik'}
+          </button>
+          <button
+            onClick={handleClear}
+            disabled={!hasResult || clearing || saving}
+            className={`text-xs rounded-lg px-4 py-1.5 font-semibold transition-colors min-w-[90px] text-center ${
+              cleared ? 'bg-green-600 text-white'
+              : !hasResult || clearing || saving ? 'bg-gray-600 text-white opacity-50 cursor-not-allowed'
+              : 'bg-red-600 hover:bg-red-500 text-white'
+            }`}
+          >
+            {clearing ? '⏳ Czyszczę...' : cleared ? '✅ Wyczyszczono' : 'Wyczyść'}
           </button>
         </div>
       </div>
