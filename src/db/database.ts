@@ -61,13 +61,70 @@ CREATE TABLE IF NOT EXISTS tournament_picks (
   top_scorer_name    TEXT
 );`;
 
+const CREATE_TOURNAMENT_RESULTS_SQL = `
+CREATE TABLE IF NOT EXISTS tournament_results (
+  id                INTEGER PRIMARY KEY CHECK (id = 1),
+  champion_team_id  INTEGER REFERENCES teams(id),
+  top_scorer_name   TEXT
+);`;
+
 async function runMigrations(db: Database): Promise<void> {
   await db.execute(CREATE_PLAYERS_SQL);
   await db.execute(CREATE_TEAMS_SQL);
   await db.execute(CREATE_MATCHES_SQL);
   await db.execute(CREATE_PICKS_SQL);
   await db.execute(CREATE_TOURNAMENT_PICKS_SQL);
+  await db.execute(CREATE_TOURNAMENT_RESULTS_SQL);
   await seedIfEmpty(db);
+  await migrateTeamNames(db);
+}
+
+const TEAM_NAME_MAP: Record<string, string> = {
+  'Mexico': 'Meksyk',
+  'South Africa': 'RPA',
+  'South Korea': 'Korea Południowa',
+  'Czechia': 'Czechy',
+  'Canada': 'Kanada',
+  'Bosnia and Herzegovina': 'Bośnia i Hercegowina',
+  'Qatar': 'Katar',
+  'Switzerland': 'Szwajcaria',
+  'Brazil': 'Brazylia',
+  'Morocco': 'Maroko',
+  'Scotland': 'Szkocja',
+  'Paraguay': 'Paragwaj',
+  'Turkey': 'Turcja',
+  'Germany': 'Niemcy',
+  'Curacao': 'Curaçao',
+  'Ivory Coast': 'Wybrzeże Kości Słoniowej',
+  'Ecuador': 'Ekwador',
+  'Netherlands': 'Holandia',
+  'Japan': 'Japonia',
+  'Sweden': 'Szwecja',
+  'Tunisia': 'Tunezja',
+  'Belgium': 'Belgia',
+  'Egypt': 'Egipt',
+  'New Zealand': 'Nowa Zelandia',
+  'Spain': 'Hiszpania',
+  'Cape Verde': 'Wyspy Zielonego Przylądka',
+  'Saudi Arabia': 'Arabia Saudyjska',
+  'Uruguay': 'Urugwaj',
+  'France': 'Francja',
+  'Iraq': 'Irak',
+  'Norway': 'Norwegia',
+  'Argentina': 'Argentyna',
+  'Algeria': 'Algieria',
+  'Jordan': 'Jordania',
+  'Portugal': 'Portugalia',
+  'DR Congo': 'DR Kongo',
+  'Colombia': 'Kolumbia',
+  'England': 'Anglia',
+  'Croatia': 'Chorwacja',
+};
+
+async function migrateTeamNames(db: Database): Promise<void> {
+  for (const [oldName, newName] of Object.entries(TEAM_NAME_MAP)) {
+    await db.execute('UPDATE teams SET name = ? WHERE name = ?', [newName, oldName]);
+  }
 }
 
 import { seedTeams, seedGroupMatches, seedKnockoutSlots } from './seed';

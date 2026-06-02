@@ -78,6 +78,25 @@ export async function getTournamentPick(playerId: number): Promise<TournamentPic
   };
 }
 
+export async function getTournamentResult(): Promise<{ championTeamId: number | null; topScorerName: string } | null> {
+  const db = await getDb();
+  const rows = await db.select<any[]>('SELECT * FROM tournament_results WHERE id = 1');
+  if (rows.length === 0) return null;
+  return { championTeamId: rows[0].champion_team_id, topScorerName: rows[0].top_scorer_name ?? '' };
+}
+
+export async function saveTournamentResult(championTeamId: number | null, topScorerName: string): Promise<void> {
+  const db = await getDb();
+  await db.execute(
+    `INSERT INTO tournament_results (id, champion_team_id, top_scorer_name)
+     VALUES (1, ?, ?)
+     ON CONFLICT(id) DO UPDATE SET
+       champion_team_id = excluded.champion_team_id,
+       top_scorer_name = excluded.top_scorer_name`,
+    [championTeamId, topScorerName]
+  );
+}
+
 export async function saveTournamentPick(playerId: number, championTeamId: number | null, topScorerName: string): Promise<void> {
   const db = await getDb();
   await db.execute(

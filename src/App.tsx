@@ -1,6 +1,7 @@
 // src/App.tsx
 import { useState, useEffect } from 'react';
 import { useTheme } from './hooks/useTheme';
+import { ThemeProvider } from './hooks/ThemeContext';
 import { getDb } from './db/database';
 import { PlayersView } from './features/players/PlayersView';
 import { PicksView } from './features/picks/PicksView';
@@ -52,6 +53,7 @@ function App() {
   const isLight = theme === 'light';
 
   return (
+    <ThemeProvider theme={theme}>
     <div className={`min-h-screen font-sans selection:bg-indigo-500/30 ${isLight ? 'bg-gray-50 text-gray-900' : 'bg-gray-900 text-gray-100'}`}>
       {/* Header */}
       <header className={`sticky top-0 z-10 shadow-md border-b ${isLight ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
@@ -114,12 +116,13 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-12 border-t border-gray-800 text-center">
+      <footer className={`sticky bottom-0 z-10 w-full px-4 sm:px-6 lg:px-8 py-3 border-t text-center ${isLight ? 'bg-gray-50 border-gray-200' : 'bg-gray-900 border-gray-800'}`}>
         <p className="text-gray-600 text-xs font-medium uppercase tracking-widest">
           &copy; 2026 Libero Law Firm | Typowanie Mistrzostw Świata FIFA
         </p>
       </footer>
     </div>
+    </ThemeProvider>
   );
 }
 
