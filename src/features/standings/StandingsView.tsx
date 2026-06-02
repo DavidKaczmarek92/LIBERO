@@ -5,6 +5,7 @@ import { getStandings } from '../../db/standings';
 import { getTournamentResult, saveTournamentResult } from '../../db/picks';
 import { getTeams } from '../../db/matches';
 import { useThemeContext } from '../../hooks/ThemeContext';
+import { TeamSelect } from '../../components/TeamSelect';
 
 export const StandingsView: React.FC = () => {
   const { isLight } = useThemeContext();
@@ -54,17 +55,15 @@ export const StandingsView: React.FC = () => {
       <div className={`rounded-xl border p-5 shadow ${isLight ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-l-2 border-indigo-500 pl-3 mb-4">Wyniki turnieju</h3>
         <div className="flex flex-wrap gap-4 items-end">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 min-w-[220px] max-w-[280px]">
             <label className="text-xs font-semibold text-gray-400">Mistrz turnieju</label>
-            <select
-              value={championTeamId ?? ''}
-              onChange={e => setChampionTeamId(e.target.value ? parseInt(e.target.value) : null)}
+            <TeamSelect
+              value={championTeamId}
+              onChange={setChampionTeamId}
+              teams={teams}
+              placeholder="— nie ustawiono —"
               disabled={saving || saved}
-              className={`border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed ${isLight ? 'bg-gray-100 border-gray-300 text-gray-900' : 'bg-gray-700 border-gray-600 text-white'}`}
-            >
-              <option value="">— nie ustawiono —</option>
-              {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-            </select>
+            />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs font-semibold text-gray-400">Król strzelców</label>
@@ -74,7 +73,7 @@ export const StandingsView: React.FC = () => {
               onChange={e => setTopScorerName(e.target.value)}
               placeholder="Imię i nazwisko..."
               disabled={saving || saved}
-              className={`border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed ${isLight ? 'bg-gray-100 border-gray-300 text-gray-900' : 'bg-gray-700 border-gray-600 text-white'}`}
+              className={`border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed ${isLight ? 'bg-gray-100 border-gray-300 text-gray-900' : 'bg-gray-700 border-gray-600 text-white'}`}
             />
           </div>
           <button

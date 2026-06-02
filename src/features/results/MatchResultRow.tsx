@@ -3,6 +3,7 @@ import React from 'react';
 import { Match, Team } from '../../types';
 import { teamFlag } from '../../utils/flags';
 import { useThemeContext } from '../../hooks/ThemeContext';
+import { TeamSelect } from '../../components/TeamSelect';
 
 interface Props {
   match: Match;
@@ -79,15 +80,12 @@ export const MatchResultRow: React.FC<Props> = ({ match, teams, onSave }) => {
           {isKnockout && isDraw && (
             <div className="flex items-center gap-2">
               <span className="text-xs text-gray-400 font-semibold">Zwycięzca:</span>
-              <select
-                value={etWinner ?? ''}
-                onChange={(e) => setEtWinner(parseInt(e.target.value) || null)}
-                className={`border rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isLight ? 'bg-gray-100 border-gray-300 text-gray-900' : 'bg-gray-700 border-gray-600 text-white'}`}
-              >
-                <option value="">Wybierz...</option>
-                {homeTeam && <option value={homeTeam.id}>{homeTeam.name}</option>}
-                {awayTeam && <option value={awayTeam.id}>{awayTeam.name}</option>}
-              </select>
+              <TeamSelect
+                value={etWinner}
+                onChange={setEtWinner}
+                teams={[...(homeTeam ? [homeTeam] : []), ...(awayTeam ? [awayTeam] : [])]}
+                placeholder="Wybierz..."
+              />
             </div>
           )}
 
