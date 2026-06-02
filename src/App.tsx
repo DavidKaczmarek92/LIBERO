@@ -8,8 +8,9 @@ import { PicksView } from './features/picks/PicksView';
 import { ResultsView } from './features/results/ResultsView';
 import { BracketView } from './features/bracket/BracketView';
 import { StandingsView } from './features/standings/StandingsView';
+import { RulesView } from './features/rules/RulesView';
 
-type Tab = 'players' | 'picks' | 'results' | 'bracket' | 'standings';
+type Tab = 'players' | 'picks' | 'results' | 'bracket' | 'standings' | 'rules';
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('players');
@@ -29,6 +30,7 @@ function App() {
     { id: 'results', label: 'Wyniki' },
     { id: 'bracket', label: 'Drabinka' },
     { id: 'standings', label: 'Tabela' },
+    { id: 'rules', label: 'Zasady' },
   ];
 
   if (dbError) {
@@ -113,6 +115,7 @@ function App() {
           {activeTab === 'results' && <ResultsView />}
           {activeTab === 'bracket' && <BracketView />}
           {activeTab === 'standings' && <StandingsView />}
+          {activeTab === 'rules' && <RulesView />}
         </div>
       </main>
 
