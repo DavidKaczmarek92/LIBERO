@@ -94,7 +94,7 @@ export const StandingsView: React.FC = () => {
       <table className="w-full text-left border-collapse">
         <thead className={`border-b ${isLight ? 'bg-gray-50 border-gray-200' : 'bg-gray-900 border-gray-700'}`}>
           <tr>
-            <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">#</th>
+            <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-center">#</th>
             <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Gracz</th>
             <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">Punkty</th>
             <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-center">Mistrz</th>
@@ -108,8 +108,8 @@ export const StandingsView: React.FC = () => {
                 ? isLight ? 'bg-indigo-50 hover:bg-indigo-100/60' : 'bg-indigo-900/20 hover:bg-indigo-900/30'
                 : isLight ? 'hover:bg-gray-50' : 'hover:bg-gray-700/50'
             }`}>
-              <td className="px-6 py-4 font-bold text-gray-400">
-                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${s.rank}`}
+              <td className="px-4 py-4 font-bold text-gray-400 text-center">
+                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`}
               </td>
               <td className={`px-6 py-4 font-semibold ${isLight ? 'text-gray-900' : 'text-white'}`}>{s.player.name}</td>
               <td className="px-6 py-4 text-right">

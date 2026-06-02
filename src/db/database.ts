@@ -8,6 +8,7 @@ export async function getDb(): Promise<Database> {
   if (_db) return _db;
   if (_initPromise) return _initPromise;
   _initPromise = Database.load('sqlite:libero.db').then(async (db) => {
+    await db.execute('PRAGMA foreign_keys = ON');
     await runMigrations(db);
     _db = db;
     return db;
