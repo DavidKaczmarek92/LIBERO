@@ -40,7 +40,7 @@ export const TeamSelect: React.FC<Props> = ({
         <option value="">{placeholder}</option>
         {teams.map(t => (
           <option key={t.id} value={t.id}>
-            {t.name}
+            {teamFlag(t.name)} {t.name}
           </option>
         ))}
       </select>

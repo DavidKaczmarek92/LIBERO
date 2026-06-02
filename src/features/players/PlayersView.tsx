@@ -32,8 +32,12 @@ export const PlayersView: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     if (confirm('Czy na pewno chcesz usunąć tego gracza? Wszystkie jego typy zostaną usunięte.')) {
-      await deletePlayer(id);
-      loadPlayers();
+      try {
+        await deletePlayer(id);
+        loadPlayers();
+      } catch (err) {
+        alert('Błąd podczas usuwania gracza: ' + err);
+      }
     }
   };
 

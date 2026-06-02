@@ -14,5 +14,7 @@ export async function addPlayer(name: string): Promise<void> {
 
 export async function deletePlayer(id: number): Promise<void> {
   const db = await getDb();
+  await db.execute('DELETE FROM picks WHERE player_id = ?', [id]);
+  await db.execute('DELETE FROM tournament_picks WHERE player_id = ?', [id]);
   await db.execute('DELETE FROM players WHERE id = ?', [id]);
 }
