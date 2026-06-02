@@ -6,6 +6,7 @@ import { getTournamentResult, saveTournamentResult } from '../../db/picks';
 import { getTeams } from '../../db/matches';
 import { useThemeContext } from '../../hooks/ThemeContext';
 import { TeamSelect } from '../../components/TeamSelect';
+import { teamFlag } from '../../utils/flags';
 
 export const StandingsView: React.FC = () => {
   const { isLight } = useThemeContext();
@@ -79,7 +80,7 @@ export const StandingsView: React.FC = () => {
           <button
             onClick={handleSaveResult}
             disabled={!hasChanged || saving || saved}
-            className={`text-white text-sm rounded-lg px-5 py-2 font-semibold transition-colors min-w-[110px] text-center ${
+            className={`text-white text-sm rounded-lg px-5 py-2.5 font-semibold transition-colors min-w-[110px] text-center ${
               saved ? 'bg-green-600' : !hasChanged || saving ? 'bg-gray-600 opacity-50 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500'
             }`}
           >
@@ -119,7 +120,7 @@ export const StandingsView: React.FC = () => {
               <td className="px-6 py-4 text-center">
                 {s.championPickName
                   ? <span className={`inline-flex items-center gap-1 text-sm font-medium ${s.championCorrect ? 'text-green-400' : isLight ? 'text-gray-700' : 'text-gray-300'}`}>
-                      {s.championCorrect && '✅ '}{s.championPickName}
+                      {s.championCorrect && '✅ '}{teamFlag(s.championPickName)} {s.championPickName}
                     </span>
                   : <span className="text-gray-400 text-sm">—</span>
                 }
