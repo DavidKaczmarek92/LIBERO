@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Match, Team } from '../../types';
 import { getMatches, getTeams, updateMatchTeams } from '../../db/matches';
 import { teamFlag } from '../../utils/flags';
+import { useThemeContext } from '../../hooks/ThemeContext';
 
 // Oficjalny bracket MŚ 2026 - pary r32
 const R32_SLOTS: { matchOrder: number; home: string; away: string }[] = [
@@ -40,15 +41,16 @@ interface MatchCardProps {
 }
 
 const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway, onUpdate }) => {
+  const { isLight } = useThemeContext();
   const homeName = teamName(match.homeTeamId, teams);
   const awayName = teamName(match.awayTeamId, teams);
   const hasResult = match.homeGoals !== null && match.awayGoals !== null;
 
   return (
-    <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden shadow-md">
+    <div className={`rounded-xl border overflow-hidden shadow-md ${isLight ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
       {/* Nagłówek slotu */}
       {(slotHome || slotAway) && (
-        <div className="flex justify-between px-3 py-1 bg-gray-900/60 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+        <div className={`flex justify-between px-3 py-1 text-[10px] font-bold text-gray-500 uppercase tracking-widest ${isLight ? 'bg-gray-50' : 'bg-gray-900/60'}`}>
           <span>{slotHome}</span>
           <span>vs</span>
           <span>{slotAway}</span>
@@ -56,7 +58,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway,
       )}
 
       {/* Drużyna 1 */}
-      <div className={`flex items-center gap-2 px-3 py-2 border-b border-gray-700 ${hasResult && match.homeGoals! > match.awayGoals! ? 'bg-indigo-900/20' : ''}`}>
+      <div className={`flex items-center gap-2 px-3 py-2 border-b ${isLight ? 'border-gray-100' : 'border-gray-700'} ${hasResult && match.homeGoals! > match.awayGoals! ? 'bg-indigo-500/10' : ''}`}>
         <span className="text-lg w-7 text-center">{match.homeTeamId ? teamFlag(homeName) : '❓'}</span>
         <select
           value={match.homeTeamId ?? ''}
@@ -64,20 +66,20 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway,
             const val = e.target.value;
             onUpdate(match.id, val ? parseInt(val) : null, match.awayTeamId ?? null);
           }}
-          className="flex-1 bg-transparent text-sm font-semibold text-white focus:outline-none cursor-pointer"
+          className={`flex-1 bg-transparent text-sm font-semibold focus:outline-none cursor-pointer ${isLight ? 'text-gray-900' : 'text-white'}`}
         >
           <option value="">TBD</option>
           {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         {hasResult && (
-          <span className={`text-lg font-bold w-6 text-right ${match.homeGoals! > match.awayGoals! ? 'text-white' : 'text-gray-500'}`}>
+          <span className={`text-lg font-bold w-6 text-right ${match.homeGoals! > match.awayGoals! ? (isLight ? 'text-gray-900' : 'text-white') : 'text-gray-500'}`}>
             {match.homeGoals}
           </span>
         )}
       </div>
 
       {/* Drużyna 2 */}
-      <div className={`flex items-center gap-2 px-3 py-2 ${hasResult && match.awayGoals! > match.homeGoals! ? 'bg-indigo-900/20' : ''}`}>  
+      <div className={`flex items-center gap-2 px-3 py-2 ${hasResult && match.awayGoals! > match.homeGoals! ? 'bg-indigo-500/10' : ''}`}>
         <span className="text-lg w-7 text-center">{match.awayTeamId ? teamFlag(awayName) : '❓'}</span>
         <select
           value={match.awayTeamId ?? ''}
@@ -85,13 +87,13 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway,
             const val = e.target.value;
             onUpdate(match.id, match.homeTeamId ?? null, val ? parseInt(val) : null);
           }}
-          className="flex-1 bg-transparent text-sm font-semibold text-white focus:outline-none cursor-pointer"
+          className={`flex-1 bg-transparent text-sm font-semibold focus:outline-none cursor-pointer ${isLight ? 'text-gray-900' : 'text-white'}`}
         >
           <option value="">TBD</option>
           {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         {hasResult && (
-          <span className={`text-lg font-bold w-6 text-right ${match.awayGoals! > match.homeGoals! ? 'text-white' : 'text-gray-500'}`}>
+          <span className={`text-lg font-bold w-6 text-right ${match.awayGoals! > match.homeGoals! ? (isLight ? 'text-gray-900' : 'text-white') : 'text-gray-500'}`}>
             {match.awayGoals}
           </span>
         )}
@@ -108,8 +110,18 @@ const MatchCard: React.FC<MatchCardProps> = ({ match, teams, slotHome, slotAway,
 };
 
 export const BracketView: React.FC = () => {
+  const { isLight } = useThemeContext();
   const [matches, setMatches] = useState<Match[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
+  const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+
+  const toggleSection = (key: string) => {
+    setCollapsed(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+  };
 
   const loadData = async () => {
     setMatches(await getMatches());
@@ -139,29 +151,38 @@ export const BracketView: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-10 pb-20">
-      {phases.map(({ label, matches: phaseMatches, cols, isR32 }) => (
-        <div key={label} className="space-y-4">
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest border-l-2 border-indigo-500 pl-3 flex items-center gap-2">
-            {label}
-          </h3>
-          <div className={`grid ${cols} gap-3`}>
-            {phaseMatches.map(m => {
-              const slot = isR32 ? R32_SLOTS.find(s => s.matchOrder === m.matchOrder) : undefined;
-              return (
-                <MatchCard
-                  key={m.id}
-                  match={m}
-                  teams={teams}
-                  slotHome={slot?.home}
-                  slotAway={slot?.away}
-                  onUpdate={handleUpdateTeams}
-                />
-              );
-            })}
+    <div className="space-y-6 pb-20">
+      {phases.map(({ label, matches: phaseMatches, cols, isR32 }) => {
+        const isCollapsed = collapsed.has(label);
+        return (
+          <div key={label} className="space-y-2">
+            <button
+              onClick={() => toggleSection(label)}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${isLight ? 'hover:bg-gray-100' : 'hover:bg-gray-800'}`}
+            >
+              <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest border-l-2 border-indigo-500 pl-3">{label}</h3>
+              <span className={`text-gray-400 transition-transform duration-200 ${isCollapsed ? '' : 'rotate-180'}`}>▼</span>
+            </button>
+            {!isCollapsed && (
+              <div className={`grid ${cols} gap-3`}>
+                {phaseMatches.map(m => {
+                  const slot = isR32 ? R32_SLOTS.find(s => s.matchOrder === m.matchOrder) : undefined;
+                  return (
+                    <MatchCard
+                      key={m.id}
+                      match={m}
+                      teams={teams}
+                      slotHome={slot?.home}
+                      slotAway={slot?.away}
+                      onUpdate={handleUpdateTeams}
+                    />
+                  );
+                })}
+              </div>
+            )}
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

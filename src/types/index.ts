@@ -48,4 +48,6 @@ export interface Standing {
   rank: number;
   championCorrect: boolean;
   topScorerCorrect: boolean;
+  championPickName: string | null;
+  topScorerPickName: string | null;
 }
