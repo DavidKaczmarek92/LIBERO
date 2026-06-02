@@ -61,8 +61,9 @@ function App() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-3">
               <div className="bg-indigo-600 p-2 rounded-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" viewBox="0 0 512 512" fill="currentColor">
+                  <circle cx="256" cy="256" r="256" fill="currentColor"/>
+                  <text x="256" y="340" fontFamily="Arial Black, Arial, sans-serif" fontWeight="900" fontSize="280" textAnchor="middle" fill="#4f46e5">L</text>
                 </svg>
               </div>
               <h1 className="text-xl font-black tracking-tighter uppercase">Libero <span className="text-indigo-500">MŚ2026</span></h1>
