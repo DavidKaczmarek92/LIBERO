@@ -5,6 +5,8 @@ import { getStandings } from '../../db/standings';
 import { getTournamentResult, saveTournamentResult } from '../../db/picks';
 import { getTeams } from '../../db/matches';
 import { useThemeContext } from '../../hooks/ThemeContext';
+import { TeamSelect } from '../../components/TeamSelect';
+import { teamFlag } from '../../utils/flags';
 
 export const StandingsView: React.FC = () => {
   const { isLight } = useThemeContext();
@@ -54,17 +56,15 @@ export const StandingsView: React.FC = () => {
       <div className={`rounded-xl border p-5 shadow ${isLight ? 'bg-white border-gray-200' : 'bg-gray-800 border-gray-700'}`}>
         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest border-l-2 border-indigo-500 pl-3 mb-4">Wyniki turnieju</h3>
         <div className="flex flex-wrap gap-4 items-end">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 min-w-[220px] max-w-[280px]">
             <label className="text-xs font-semibold text-gray-400">Mistrz turnieju</label>
-            <select
-              value={championTeamId ?? ''}
-              onChange={e => setChampionTeamId(e.target.value ? parseInt(e.target.value) : null)}
+            <TeamSelect
+              value={championTeamId}
+              onChange={setChampionTeamId}
+              teams={teams}
+              placeholder="— nie ustawiono —"
               disabled={saving || saved}
-              className={`border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed ${isLight ? 'bg-gray-100 border-gray-300 text-gray-900' : 'bg-gray-700 border-gray-600 text-white'}`}
-            >
-              <option value="">— nie ustawiono —</option>
-              {teams.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-            </select>
+            />
           </div>
           <div className="flex flex-col gap-1">
             <label className="text-xs font-semibold text-gray-400">Król strzelców</label>
@@ -74,13 +74,13 @@ export const StandingsView: React.FC = () => {
               onChange={e => setTopScorerName(e.target.value)}
               placeholder="Imię i nazwisko..."
               disabled={saving || saved}
-              className={`border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed ${isLight ? 'bg-gray-100 border-gray-300 text-gray-900' : 'bg-gray-700 border-gray-600 text-white'}`}
+              className={`border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed ${isLight ? 'bg-gray-100 border-gray-300 text-gray-900' : 'bg-gray-700 border-gray-600 text-white'}`}
             />
           </div>
           <button
             onClick={handleSaveResult}
             disabled={!hasChanged || saving || saved}
-            className={`text-white text-sm rounded-lg px-5 py-2 font-semibold transition-colors min-w-[110px] text-center ${
+            className={`text-white text-sm rounded-lg px-5 py-2.5 font-semibold transition-colors min-w-[110px] text-center ${
               saved ? 'bg-green-600' : !hasChanged || saving ? 'bg-gray-600 opacity-50 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-500'
             }`}
           >
@@ -94,7 +94,7 @@ export const StandingsView: React.FC = () => {
       <table className="w-full text-left border-collapse">
         <thead className={`border-b ${isLight ? 'bg-gray-50 border-gray-200' : 'bg-gray-900 border-gray-700'}`}>
           <tr>
-            <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">#</th>
+            <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-center">#</th>
             <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest">Gracz</th>
             <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-right">Punkty</th>
             <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest text-center">Mistrz</th>
@@ -108,8 +108,8 @@ export const StandingsView: React.FC = () => {
                 ? isLight ? 'bg-indigo-50 hover:bg-indigo-100/60' : 'bg-indigo-900/20 hover:bg-indigo-900/30'
                 : isLight ? 'hover:bg-gray-50' : 'hover:bg-gray-700/50'
             }`}>
-              <td className="px-6 py-4 font-bold text-gray-400">
-                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${s.rank}`}
+              <td className="px-4 py-4 font-bold text-gray-400 text-center">
+                {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}`}
               </td>
               <td className={`px-6 py-4 font-semibold ${isLight ? 'text-gray-900' : 'text-white'}`}>{s.player.name}</td>
               <td className="px-6 py-4 text-right">
@@ -120,7 +120,7 @@ export const StandingsView: React.FC = () => {
               <td className="px-6 py-4 text-center">
                 {s.championPickName
                   ? <span className={`inline-flex items-center gap-1 text-sm font-medium ${s.championCorrect ? 'text-green-400' : isLight ? 'text-gray-700' : 'text-gray-300'}`}>
-                      {s.championCorrect && '✅ '}{s.championPickName}
+                      {s.championCorrect && '✅ '}{teamFlag(s.championPickName)} {s.championPickName}
                     </span>
                   : <span className="text-gray-400 text-sm">—</span>
                 }

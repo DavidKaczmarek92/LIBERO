@@ -8,6 +8,7 @@ export const PlayersView: React.FC = () => {
   const { isLight } = useThemeContext();
   const [players, setPlayers] = useState<Player[]>([]);
   const [newName, setNewName] = useState('');
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
   const loadPlayers = async () => {
     const data = await getPlayers();
@@ -31,9 +32,12 @@ export const PlayersView: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm('Czy na pewno chcesz usunąć tego gracza? Wszystkie jego typy zostaną usunięte.')) {
+    try {
       await deletePlayer(id);
+      setConfirmDeleteId(null);
       loadPlayers();
+    } catch (err) {
+      alert('Błąd podczas usuwania gracza: ' + err);
     }
   };
 
@@ -59,15 +63,32 @@ export const PlayersView: React.FC = () => {
         {players.map((player) => (
           <div key={player.id} className={`rounded-xl p-4 shadow-md flex justify-between items-center border transition-colors ${isLight ? 'bg-white border-gray-200 hover:border-gray-300' : 'bg-gray-800 border-gray-700 hover:border-gray-600'}`}>
             <span className={`text-base font-semibold ${isLight ? 'text-gray-900' : 'text-white'}`}>{player.name}</span>
-            <button
-              onClick={() => handleDelete(player.id)}
-              className="text-gray-500 hover:text-red-400 p-2 transition-colors rounded-lg hover:bg-red-400/10"
-              title="Usuń gracza"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-              </svg>
-            </button>
+            {confirmDeleteId === player.id ? (
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => handleDelete(player.id)}
+                  className="text-xs bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg transition-colors"
+                >
+                  Usuń
+                </button>
+                <button
+                  onClick={() => setConfirmDeleteId(null)}
+                  className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded-lg transition-colors"
+                >
+                  Anuluj
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setConfirmDeleteId(player.id)}
+                className="text-gray-500 hover:text-red-400 p-2 transition-colors rounded-lg hover:bg-red-400/10"
+                title="Usuń gracza"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+              </button>
+            )}
           </div>
         ))}
         {players.length === 0 && (

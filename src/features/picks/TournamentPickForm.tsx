@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Team } from '../../types';
 import { getTournamentPick, saveTournamentPick } from '../../db/picks';
 import { useThemeContext } from '../../hooks/ThemeContext';
+import { TeamSelect } from '../../components/TeamSelect';
 
 interface Props {
   playerId: number;
@@ -54,16 +55,11 @@ export const TournamentPickForm: React.FC<Props> = ({ playerId, teams }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-400">Typowany mistrz</label>
-          <select
-            value={championTeamId ?? ''}
-            onChange={(e) => setChampionTeamId(parseInt(e.target.value) || null)}
-            className={`w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 ${isLight ? 'bg-gray-100 border-gray-300 text-gray-900' : 'bg-gray-700 border-gray-600 text-white'}`}
-          >
-            <option value="">Wybierz drużynę...</option>
-            {teams.map(t => (
-              <option key={t.id} value={t.id}>{t.name}</option>
-            ))}
-          </select>
+          <TeamSelect
+            value={championTeamId}
+            onChange={setChampionTeamId}
+            teams={teams}
+          />
         </div>
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-400">Typowany król strzelców</label>
