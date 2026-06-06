@@ -23,12 +23,18 @@ export function calculateStandings(
   tournamentPicks: RawTournamentPick[],
   results: TournamentResults
 ): Standing[] {
+  // Pre-index picks by player_id to avoid O(N*M) complexity
+  const picksMap = new Map<number, RawTournamentPick>(
+    tournamentPicks.map(p => [p.player_id, p])
+  );
+
   // Sort players: total_points DESC, name ASC
   const sortedPlayers = [...players].sort((a, b) => {
     if (b.total_points !== a.total_points) {
       return b.total_points - a.total_points;
     }
-    return a.name.localeCompare(b.name);
+    // Use an explicit locale for deterministic tie-breaking across environments
+    return a.name.localeCompare(b.name, 'en');
   });
 
   const actualChampionId = results.champion_team_id;
@@ -43,7 +49,7 @@ export function calculateStandings(
     }
     lastPoints = p.total_points;
 
-    const pick = tournamentPicks.find(tp => tp.player_id === p.id);
+    const pick = picksMap.get(p.id);
     
     const championCorrect = 
       actualChampionId !== null && 
