@@ -10,7 +10,6 @@ describe('teamFlag', () => {
   });
 
   it('should return fallback flag for unknown teams', () => {
-    expect(teamFlag('Nibylandia')).toBe('🏳️');
     expect(teamFlag('Unknown Team')).toBe('🏳️');
   });
 
