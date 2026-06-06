@@ -80,10 +80,10 @@ describe('calculatePoints', () => {
     });
     
     // Testing with negative goals (not expected in UI but logic should be robust)
-    it('should handle negative goals as mathematically valid inputs', () => {
+    it('should return 0 for negative goals as they are not supported', () => {
       const pick = { homeGoals: -1, awayGoals: -2 };
       const result = { homeGoals: -1, awayGoals: -2 };
-      expect(calculatePoints(pick, result, 'group')).toBe(3);
+      expect(calculatePoints(pick, result, 'group')).toBe(0);
     });
   });
 });

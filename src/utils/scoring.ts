@@ -6,6 +6,16 @@ export function calculatePoints(
   result: { homeGoals: number; awayGoals: number; extraTimeWinnerId?: number | null },
   phase: Phase
 ): number {
+  // Never support negative numbers
+  if (
+    pick.homeGoals < 0 ||
+    pick.awayGoals < 0 ||
+    result.homeGoals < 0 ||
+    result.awayGoals < 0
+  ) {
+    return 0;
+  }
+
   // Exact score → 3 pts
   if (pick.homeGoals === result.homeGoals && pick.awayGoals === result.awayGoals) {
     return 3;
