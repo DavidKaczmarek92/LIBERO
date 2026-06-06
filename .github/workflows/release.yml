@@ -25,11 +25,11 @@ jobs:
       - name: Node.js setup
         uses: actions/setup-node@v4
         with:
-          node-version: 22.11.0
+          node-version: 22.12.0
           cache: 'npm'
 
       - name: Install frontend dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build and Release
         uses: tauri-apps/tauri-action@v0
